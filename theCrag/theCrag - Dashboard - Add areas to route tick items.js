@@ -7,7 +7,8 @@
 // @match        https://www.thecrag.com/
 // @match        https://www.thecrag.com/dashboard
 // @icon         https://www.google.com/s2/favicons?domain=thecrag.com
-// @require      https://gist.github.com/raw/2625891/waitForKeyElements.js
+// require       https://gist.github.com/raw/2625891/waitForKeyElements.js
+// @require 	 https://greasyfork.org/scripts/31940-waitforkeyelements/code/waitForKeyElements.js?version=209282
 // @grant        none
 // ==/UserScript==
 
