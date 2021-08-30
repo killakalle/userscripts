@@ -5,6 +5,9 @@
 // @description removes unneccessary stuff from the dashboard, stream starts right away at the top
 // @match    https://www.thecrag.com/
 // @match    https://www.thecrag.com/dashboard
+// @match    https://www.thecrag.com/es/escalar/*
+// @match    https://www.thecrag.com/climbing/*
+// @exclude  https://www.thecrag.com/es/escalar/*route*
 // @icon     https://www.google.com/s2/favicons?domain=thecrag.com
 // @namespace https://greasyfork.org/users/797340
 // ==/UserScript==
