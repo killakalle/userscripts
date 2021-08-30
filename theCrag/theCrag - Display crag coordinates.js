@@ -2,7 +2,7 @@
 // @name         theCrag - Display crag coordinates
 // @namespace    http://tampermonkey.net/
 // @version      0.1
-// @description  Displays crag coordinates and adds a button to copy coordinates to clipboard
+// @description  Displays crag coordinates as link, click copies them to clipboard
 // @author       You
 // @match        https://www.thecrag.com/es/escalar/*
 // @match        https://www.thecrag.com/climbing/*
@@ -30,28 +30,25 @@ function copyStringToClipboard(str) {
 console.log('theCrag - Display crag coordinates')
 
 // Find Google Maps link
-var elements = document.querySelectorAll(
+let elements = document.querySelectorAll(
 	"a[href^='https://www.google.com/maps/dir/']"
 )
 if (elements !== null) {
 	const regex = /-?\d+\.\d+,-?\d+\.\d+/ // this should match GPS coordinates of type "38.694833,-9.446831"
 	for (var i = 0; i < elements.length; i++) {
-		// Extract coordinates
+		// Extract coordinates and identify parent
 		const href = elements[i].href
 		const foundCoordinates = href.match(regex)[0]
-		console.log(foundCoordinates)
-
-		// Append coordinates to parent object
 		const paragraph = elements[i].parentElement
-		const coordinatesText = document.createTextNode(foundCoordinates)
-		paragraph.appendChild(coordinatesText)
 
-		// Add button
-		let btn = document.createElement('button')
-		btn.innerHTML = 'Copy to clipboard'
-		btn.onclick = function () {
+		// Append coordinates as clickable link
+		const a = document.createElement('a')
+		const coordinatesText = document.createTextNode(foundCoordinates)
+		a.appendChild(coordinatesText)
+		a.href = 'javascript:void(0)'
+		a.onclick = function () {
 			copyStringToClipboard(foundCoordinates)
 		}
-		paragraph.appendChild(btn)
+		paragraph.appendChild(a)
 	}
 }
