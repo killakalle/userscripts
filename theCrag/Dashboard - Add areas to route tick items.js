@@ -1,19 +1,17 @@
 // ==UserScript==
 // @name         theCrag - Dashboard - Add areas to route tick items
 // @namespace    http://tampermonkey.net/
-// @version      0.5
+// @version      0.6
 // @description  Adds a route's area to tick items in the stream
 // @author       killakalle
 // @match        https://www.thecrag.com/
 // @match        https://www.thecrag.com/dashboard*
-// @require      https://greasyfork.org/scripts/31940-waitforkeyelements/code/waitForKeyElements.js?version=209282
+// @icon    	 https://www.google.com/s2/favicons?domain=thecrag.com
 // @grant        none
 // @license      MIT
 // @downloadURL  https://greasyfork.org/en/scripts/429706-thecrag-dashboard-add-areas-to-route-tick-items
 // @updateURL    https://greasyfork.org/en/scripts/429706-thecrag-dashboard-add-areas-to-route-tick-items
 // ==/UserScript==
-
-waitForKeyElements('.tick-item', addAreaToRoute)
 
 function getLastArea (title) {
   if (!title) return ''
@@ -22,30 +20,52 @@ function getLastArea (title) {
   return last.replace(/\u00a0/g, ' ').trim()
 }
 
-function addAreaToRoute (jNode) {
-  let route = jNode.find('.route')
-  let routeLink = route.find('a')
+function processTickItem (tickItem) {
+  if (tickItem.dataset.areaProcessed) return
+  tickItem.dataset.areaProcessed = 'true'
 
-  if (!routeLink.length) return
+  const routeLink = tickItem.querySelector('.route a')
+  if (!routeLink) return
 
-  const routeLinkTitle = routeLink.attr('title')
-  const routeLinkText = routeLink.text()
-  const lastArea = getLastArea(routeLinkTitle)
+  const title = routeLink.getAttribute('title')
+  const originalText = routeLink.textContent
+  const stars = routeLink.querySelectorAll('.star').length
+  const lastArea = getLastArea(title)
 
-  let stars = routeLink.find('.star').length
-
-  routeLink.empty()
+  routeLink.innerHTML = ''
 
   routeLink.append(document.createTextNode(lastArea + ' › '))
 
   for (let i = 0; i < stars; i++) {
-    let starSpan = document.createElement('span')
-    starSpan.classList.add('star')
-    starSpan.textContent = '★'
-    routeLink.append(starSpan)
+    const star = document.createElement('span')
+    star.className = 'star'
+    star.textContent = '★'
+    routeLink.appendChild(star)
   }
 
   routeLink.append(
-    document.createTextNode(' ' + routeLinkText.replace(/★/g, '').trim())
+    document.createTextNode(' ' + originalText.replace(/★/g, '').trim())
   )
 }
+
+function init () {
+  document.querySelectorAll('.tick-item').forEach(processTickItem)
+
+  const observer = new MutationObserver(mutations => {
+    mutations.forEach(mutation => {
+      mutation.addedNodes.forEach(node => {
+        if (node.nodeType !== 1) return
+
+        if (node.matches?.('.tick-item')) {
+          processTickItem(node)
+        }
+
+        node.querySelectorAll?.('.tick-item').forEach(processTickItem)
+      })
+    })
+  })
+
+  observer.observe(document.body, { childList: true, subtree: true })
+}
+
+window.addEventListener('load', init)
