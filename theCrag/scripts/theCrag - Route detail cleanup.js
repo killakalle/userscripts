@@ -4,8 +4,13 @@
 // @version      1.4
 // @description  Hide unneeded sections on route detail pages
 // @match        https://www.thecrag.com/es/escalar/*/route/*
+// @match        https://www.thecrag.com/en/climbing/*/route/*
+// @icon         https://www.google.com/s2/favicons?domain=thecrag.com
 // @run-at       document-end
 // @grant        none
+// @license      MIT
+// @downloadURL  https://update.greasyfork.org/scripts/566463/theCrag%20%E2%80%93%20Route%20detail%20page%20cleanup.user.js
+// @updateURL    https://update.greasyfork.org/scripts/566463/theCrag%20%E2%80%93%20Route%20detail%20page%20cleanup.meta.js
 // ==/UserScript==
 
 ;(function () {
