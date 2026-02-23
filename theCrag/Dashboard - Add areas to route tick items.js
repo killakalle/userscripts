@@ -1,14 +1,12 @@
 // ==UserScript==
 // @name         theCrag - Dashboard - Add areas to route tick items
 // @namespace    http://tampermonkey.net/
-// @version      0.4
+// @version      0.5
 // @description  Adds a route's area to tick items in the stream
 // @author       killakalle
 // @match        https://www.thecrag.com/
-// @match        https://www.thecrag.com/dashboard
-// @icon         https://www.google.com/s2/favicons?domain=thecrag.com
-// require       https://gist.github.com/raw/2625891/waitForKeyElements.js
-// @require 	 https://greasyfork.org/scripts/31940-waitforkeyelements/code/waitForKeyElements.js?version=209282
+// @match        https://www.thecrag.com/dashboard*
+// @require      https://greasyfork.org/scripts/31940-waitforkeyelements/code/waitForKeyElements.js?version=209282
 // @grant        none
 // @license      MIT
 // @downloadURL  https://greasyfork.org/en/scripts/429706-thecrag-dashboard-add-areas-to-route-tick-items
@@ -17,31 +15,37 @@
 
 waitForKeyElements('.tick-item', addAreaToRoute)
 
-// Returns the last area from a title string
 function getLastArea (title) {
-  const separator = '›'
-  const lastIndex = title.lastIndexOf(separator)
-  return title.substring(lastIndex + 1)
+  if (!title) return ''
+  const parts = title.split('›')
+  const last = parts[parts.length - 1]
+  return last.replace(/\u00a0/g, ' ').trim()
 }
 
 function addAreaToRoute (jNode) {
-  console.log('theCrag - Adding area to route')
-
   let route = jNode.find('.route')
   let routeLink = route.find('a')
+
+  if (!routeLink.length) return
+
   const routeLinkTitle = routeLink.attr('title')
   const routeLinkText = routeLink.text()
   const lastArea = getLastArea(routeLinkTitle)
-  let stars = 0
-  if (routeLinkText.lastIndexOf('★') >= 0) {
-    stars = routeLinkText.lastIndexOf('★') - routeLinkText.indexOf('★') + 1
-  }
+
+  let stars = routeLink.find('.star').length
+
   routeLink.empty()
-  routeLink.append(document.createTextNode(lastArea + '› '))
+
+  routeLink.append(document.createTextNode(lastArea + ' › '))
+
   for (let i = 0; i < stars; i++) {
     let starSpan = document.createElement('span')
     starSpan.classList.add('star')
+    starSpan.textContent = '★'
     routeLink.append(starSpan)
   }
-  routeLink.append(document.createTextNode(routeLinkText.replaceAll('★', '')))
+
+  routeLink.append(
+    document.createTextNode(' ' + routeLinkText.replace(/★/g, '').trim())
+  )
 }
