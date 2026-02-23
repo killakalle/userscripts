@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         theCrag - Highlight Clasico Tags
 // @namespace    http://tampermonkey.net/
-// @version      0.1
+// @version      0.2
 // @description  Highlights routes tagged as Clásico or Megaclásica
 // @author       killakalle
 // @match        https://www.thecrag.com/*
@@ -22,19 +22,20 @@ function highlightTags (node) {
       if (span.dataset.clasicoProcessed) return
       span.dataset.clasicoProcessed = 'true'
 
-      span.style.padding = '2px 8px'
-      span.style.borderRadius = '12px'
-      span.style.fontWeight = 'bold'
-      span.style.color = '#fff'
+      span.style.padding = '1px 6px'
+      span.style.borderRadius = '8px'
+      span.style.fontWeight = '600'
+      span.style.fontSize = '0.85em'
       span.style.display = 'inline-block'
-      span.style.boxShadow = '0 0 6px rgba(0, 150, 0, 0.6)'
+      span.style.lineHeight = '1.2'
+      span.style.color = '#155724'
 
       if (text === 'Clásico') {
-        span.style.backgroundColor = '#2ecc71' // fresh green
+        span.style.backgroundColor = '#d4edda' // soft green
       }
 
       if (text === 'Megaclásica') {
-        span.style.backgroundColor = '#16a085' // deeper premium green
+        span.style.backgroundColor = '#c3e6cb' // slightly stronger soft green
       }
     }
   })
