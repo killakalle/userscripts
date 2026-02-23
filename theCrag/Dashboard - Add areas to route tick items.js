@@ -7,6 +7,7 @@
 // @match        https://www.thecrag.com/
 // @match        https://www.thecrag.com/dashboard*
 // @icon    	 https://www.google.com/s2/favicons?domain=thecrag.com
+// @run-at 		 document-idle
 // @grant        none
 // @license      MIT
 // @downloadURL  https://greasyfork.org/en/scripts/429706-thecrag-dashboard-add-areas-to-route-tick-items
@@ -68,4 +69,4 @@ function init () {
   observer.observe(document.body, { childList: true, subtree: true })
 }
 
-window.addEventListener('load', init)
+init()
