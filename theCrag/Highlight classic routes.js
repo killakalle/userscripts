@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         theCrag - Highlight Clasico Tags
 // @namespace    http://tampermonkey.net/
-// @version      0.2
+// @version      0.3
 // @description  Highlights routes tagged as Clásico or Megaclásica
 // @author       killakalle
 // @match        https://www.thecrag.com/*
@@ -10,6 +10,7 @@
 // @license      MIT
 // @downloadURL  https://greasyfork.org/en/scripts/567285-thecrag-highlight-clasico-tags
 // @updateURL    https://greasyfork.org/en/scripts/567285-thecrag-highlight-clasico-tags
+// @run-at       document-idle
 // ==/UserScript==
 
 function highlightTags (node) {
@@ -57,4 +58,4 @@ function init () {
   observer.observe(document.body, { childList: true, subtree: true })
 }
 
-window.addEventListener('load', init)
+init()
