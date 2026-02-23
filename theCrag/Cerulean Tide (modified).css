@@ -48,7 +48,7 @@ A deep blue theme for theCrag. As a dark theme, images and photos are slightly d
         color: var(--text2);
     }
 
-    .crumb--selected > a {
+    .crumb--selected>a {
         color: var(--text1);
     }
 
@@ -92,15 +92,15 @@ A deep blue theme for theCrag. As a dark theme, images and photos are slightly d
         background-image: none;
     }
 
-    .tab > a {
+    .tab>a {
         color: var(--text2);
     }
 
-    .tab--selected > a {
+    .tab--selected>a {
         border-color: var(--bg1);
     }
 
-    a.iblock.ablock > img {
+    a.iblock.ablock>img {
         filter: brightness(0.6);
     }
 
@@ -134,7 +134,7 @@ A deep blue theme for theCrag. As a dark theme, images and photos are slightly d
         background: var(--bg1);
     }
 
-    .hoverable:hover > a {
+    .hoverable:hover>a {
         background: inherit;
         color: var(--text2);
     }
@@ -196,7 +196,7 @@ A deep blue theme for theCrag. As a dark theme, images and photos are slightly d
         color: var(--text2);
     }
 
-    .stream .calendar-date > .day {
+    .stream .calendar-date>.day {
         background: var(--bg4);
     }
 
@@ -230,6 +230,7 @@ A deep blue theme for theCrag. As a dark theme, images and photos are slightly d
     .dropdown-menu {
         background-color: var(--bg6);
     }
+
     .dropdown-menu .nav-header {
         color: var(--text1);
     }
@@ -238,7 +239,7 @@ A deep blue theme for theCrag. As a dark theme, images and photos are slightly d
         text-shadow: 0 1px 0 rgba(0, 0, 0, 0.5);
     }
 
-    .dropdown-menu li > a {
+    .dropdown-menu li>a {
         color: var(--text2);
     }
 
@@ -247,9 +248,9 @@ A deep blue theme for theCrag. As a dark theme, images and photos are slightly d
         border-bottom: 1px solid var(--bg6);
     }
 
-    .dropdown-menu li > a:hover,
-    .dropdown-menu li > a:focus,
-    .dropdown-submenu:hover > a {
+    .dropdown-menu li>a:hover,
+    .dropdown-menu li>a:focus,
+    .dropdown-submenu:hover>a {
         background-color: var(--bg3);
         background-image: none;
     }
@@ -262,7 +263,7 @@ A deep blue theme for theCrag. As a dark theme, images and photos are slightly d
         background-color: var(--bg6);
     }
 
-    .tab:hover > a {
+    .tab:hover>a {
         background: var(--bg4);
         border-color: var(--bg1);
     }
@@ -293,12 +294,12 @@ A deep blue theme for theCrag. As a dark theme, images and photos are slightly d
     }
 
     .secondary-navigation .group,
-    .secondary-navigation li.top > a {
+    .secondary-navigation li.top>a {
         border-bottom: 1px solid var(--bg4);
     }
 
-    .secondary-navigation .embed-menu li > a:hover,
-    .secondary-navigation li.selected > a,
+    .secondary-navigation .embed-menu li>a:hover,
+    .secondary-navigation li.selected>a,
     .secondary-navigation a:hover,
     .secondary-navigation a.active:hover,
     .secondary-navigation a:focus {
@@ -307,11 +308,11 @@ A deep blue theme for theCrag. As a dark theme, images and photos are slightly d
         background-image: none;
     }
 
-    .dropdown-submenu > a:after {
+    .dropdown-submenu>a:after {
         border-left-color: var(--bg1);
     }
 
-    .dropdown-submenu:hover > a:after {
+    .dropdown-submenu:hover>a:after {
         border-left-color: var(--bg5);
     }
 
@@ -327,12 +328,12 @@ A deep blue theme for theCrag. As a dark theme, images and photos are slightly d
         background: var(--bg7);
     }
 
-    .node-listview > .area {
+    .node-listview>.area {
         border-color: var(--bg5);
     }
 
-    .node-listview > .hover,
-    .node-listview > .route.hover {
+    .node-listview>.hover,
+    .node-listview>.route.hover {
         background: var(--bg7);
         border-color: var(--bg1) !important;
     }
@@ -361,20 +362,20 @@ A deep blue theme for theCrag. As a dark theme, images and photos are slightly d
         background: var(--bg1);
     }
 
-    .node-listview > .selected {
+    .node-listview>.selected {
         background: var(--bg6);
         color: var(--text1);
     }
 
-    .node-listview > .route.hover .sticky-header {
+    .node-listview>.route.hover .sticky-header {
         background: var(--bg7);
     }
 
-    .node-listview > .route .sticky-header {
+    .node-listview>.route .sticky-header {
         background: var(--bg8);
     }
 
-    .node-listview > .route {
+    .node-listview>.route {
         background: var(--bg8);
         border-color: var(--bg5);
     }
@@ -412,7 +413,7 @@ A deep blue theme for theCrag. As a dark theme, images and photos are slightly d
     }
 
     @media only screen and (min-width: 915px) {
-        .node-listview .desc.brief > * {
+        .node-listview .desc.brief>* {
             border-color: var(--bg4);
         }
     }
@@ -518,6 +519,7 @@ A deep blue theme for theCrag. As a dark theme, images and photos are slightly d
         background: var(--bg7);
         border-color: var(--bg1);
     }
+
     .select2-drop-active {
         border: 1px solid #5897fb;
         border-top: none;
@@ -714,23 +716,23 @@ A deep blue theme for theCrag. As a dark theme, images and photos are slightly d
         border-color: var(--bg4);
     }
 
-    .pagination ul > li > a:hover,
-    .pagination ul > .active > a,
-    .pagination ul > .active > span {
+    .pagination ul>li>a:hover,
+    .pagination ul>.active>a,
+    .pagination ul>.active>span {
         color: var(--text1);
         background-color: var(--bg1);
         border-color: var(--bg1);
     }
 
-    .pagination ul > li > a,
-    .pagination ul > li > span {
+    .pagination ul>li>a,
+    .pagination ul>li>span {
         background-color: var(--bg7);
         border-color: var(--bg4);
     }
 
-    .pagination ul > .disabled > span,
-    .pagination ul > .disabled > a,
-    .pagination ul > .disabled > a:hover {
+    .pagination ul>.disabled>span,
+    .pagination ul>.disabled>a,
+    .pagination ul>.disabled>a:hover {
         color: var(--text3);
         background-color: var(--bg7);
         opacity: 0.6;
@@ -777,7 +779,7 @@ A deep blue theme for theCrag. As a dark theme, images and photos are slightly d
         background: var(--bg6);
     }
 
-    .forum .comment-content > div {
+    .forum .comment-content>div {
         border-color: var(--bg4);
     }
 
@@ -789,7 +791,7 @@ A deep blue theme for theCrag. As a dark theme, images and photos are slightly d
         filter: contrast(0.5);
     }
 
-    .item-list > .header {
+    .item-list>.header {
         background: var(--bg7);
         border-color: var(--bg4);
     }
@@ -836,7 +838,7 @@ A deep blue theme for theCrag. As a dark theme, images and photos are slightly d
         filter: saturate(0.7) brightness(0.7);
     }
 
-    .bigstats--borders .bigstats__stat > * {
+    .bigstats--borders .bigstats__stat>* {
         background: var(--bg10);
         border-color: var(--bg5);
     }
@@ -850,19 +852,19 @@ A deep blue theme for theCrag. As a dark theme, images and photos are slightly d
         background: var(--bg6);
     }
 
-    .table td > div {
+    .table td>div {
         border-color: var(--bg5);
     }
 
-    .table .rank1 > td {
+    .table .rank1>td {
         background: #6a5d1f;
     }
 
-    .table .rank2 > td {
+    .table .rank2>td {
         background: #52595e;
     }
 
-    .table .rank3 > td {
+    .table .rank3>td {
         background: #765237;
     }
 
@@ -1194,7 +1196,8 @@ A deep blue theme for theCrag. As a dark theme, images and photos are slightly d
     }
 
     .comment .markdown[style*="f4f4f4"] {
-        background: #2a2436 !important;  /* subtle blue-purple */
+        background: #2a2436 !important;
+        /* subtle blue-purple */
         border-left: 4px solid #7a5cff;
     }
 
