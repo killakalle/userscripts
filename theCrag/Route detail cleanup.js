@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         theCrag – Route detail page cleanup
 // @namespace    https://thecrag.com/
-// @version      1.5.1
+// @version      1.5.2
 // @description  Hide unneeded sections on route detail pages
 // @match        https://www.thecrag.com/es/escalar/*/route/*
 // @match        https://www.thecrag.com/en/climbing/*/route/*
@@ -139,6 +139,12 @@
       3: 'gb1',
       4: 'gb2',
       5: 'gb2',
+      '5a': 'gb2',
+      '5a+': 'gb2',
+      '5b': 'gb2',
+      '5b+': 'gb2',
+      '5c': 'gb2',
+      '5c+': 'gb2',
       '6a': 'gb2',
       '6a+': 'gb3',
       '6b': 'gb3',
