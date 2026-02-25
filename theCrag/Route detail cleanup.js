@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         theCrag – Route detail page cleanup
 // @namespace    https://thecrag.com/
-// @version      1.4
+// @version      1.5
 // @description  Hide unneeded sections on route detail pages
 // @match        https://www.thecrag.com/es/escalar/*/route/*
 // @match        https://www.thecrag.com/en/climbing/*/route/*
@@ -134,34 +134,64 @@
 
   /* ==================== GRADES / grAId HANDLING ==================== */
 
+  function getGbClass (grade) {
+    const map = {
+      3: 'gb1',
+      4: 'gb2',
+      5: 'gb2',
+      '6a': 'gb3',
+      '6a+': 'gb3',
+      '6b': 'gb3',
+      '6b+': 'gb3',
+      '6c': 'gb3',
+      '6c+': 'gb4',
+      '7a': 'gb4',
+      '7a+': 'gb4',
+      '7b': 'gb4',
+      '7b+': 'gb5',
+      '7c': 'gb5',
+      '7c+': 'gb6',
+      '8a': 'gb6',
+      '8a+': 'gb7',
+      '8b': 'gb7',
+      '8b+': 'gb8',
+      '8c': 'gb8',
+      '8c+': 'gb9',
+      '9a': 'gb9'
+    }
+
+    return map[grade.toLowerCase()] || 'gb3'
+  }
+
   function insertGraidStat (graidValue) {
     if (!graidValue) return
 
     const statsUl = document.querySelector('.headline__guts ul.stats')
     if (!statsUl) return
 
+    // Extract first grade (e.g. 6c from "6c [6b+ - 6c]")
+    const match = graidValue.match(/^([0-9][abc]?\+?)/i)
+    if (!match) return
+
+    const firstGrade = match[1]
+
     const li = document.createElement('li')
-    li.innerHTML = `<strong>grAId:</strong> ${graidValue}`
 
-    const lis = Array.from(statsUl.querySelectorAll('li'))
-    let inserted = false
+    // Create colored grade span
+    const gradeSpan = document.createElement('span')
+    gradeSpan.textContent = firstGrade
+    gradeSpan.className = getGbClass(firstGrade)
 
-    for (const l of lis) {
-      const strong = l.querySelector('strong')
-      if (strong && strong.textContent.trim().startsWith('Ascensiones')) {
-        if (l.nextSibling) {
-          statsUl.insertBefore(li, l.nextSibling)
-        } else {
-          statsUl.appendChild(li)
-        }
-        inserted = true
-        break
-      }
+    li.innerHTML = `<strong>grAId:</strong> `
+    li.appendChild(gradeSpan)
+
+    // Append remaining text (e.g. " [6b+ - 6c]")
+    const remainder = graidValue.slice(firstGrade.length)
+    if (remainder.trim()) {
+      li.appendChild(document.createTextNode(remainder))
     }
 
-    if (!inserted) {
-      statsUl.appendChild(li)
-    }
+    statsUl.appendChild(li)
   }
 
   function handleGradesSection () {
