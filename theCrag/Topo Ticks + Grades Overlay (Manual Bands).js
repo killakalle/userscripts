@@ -21,7 +21,7 @@
   const SHOW_GRADES = true
   const SHOW_TICKS = true
 
-  const GRADE_BANDS = {
+  const GRADE_BANDS_SPORT = {
     beginner: {
       color: '#53b41c',
       grades: ['3', '3+', '3b', '3b+', '3c', '3c+']
@@ -109,6 +109,85 @@
     }
   }
 
+  const GRADE_BANDS_BOULDER = {
+    beginner: {
+      color: '#53b41c',
+      grades: ['3', '3+', '3b', '3b+', '3c', '3c+']
+    },
+    intermediate: {
+      color: '#ffe201',
+      grades: ['4', '4+', '4a', '4a+', '4b', '4b+', '4c', '4c+']
+    },
+    experienced: {
+      color: '#e6842a',
+      grades: [
+        '5',
+        '5+',
+        '5a',
+        '5a+',
+        '5b',
+        '5b+',
+        '5c',
+        '5c/c+',
+        '5c+',
+        '5c+/6a',
+        '6a',
+        '6a+',
+        '6a+/b',
+        '6b',
+        '6b/b+',
+        '6b+',
+        '6b+/c'
+      ]
+    },
+    expert: {
+      color: '#db2424',
+      grades: [
+        '6c',
+        '6c/c+',
+        '6c+',
+        '6c+/7a',
+        '7a',
+        '7a/a+',
+        '7a+',
+        '7a+/b',
+        '7b',
+        '7b/b+',
+        '7b+',
+        '7b+/c',
+        '7c',
+        '7c/c+',
+        '7c+',
+        '7c+/8a'
+      ]
+    },
+    elite: {
+      color: '#aa1d7b',
+      grades: [
+        '8a',
+        '8a/a+',
+        '8a+',
+        '8a+/b',
+        '8b',
+        '8b/b+',
+        '8b+',
+        '8c',
+        '8c/c+',
+        '8c+',
+        '8c+/9a',
+        '9a',
+        '9a/a+',
+        '9a+',
+        '9a+/b',
+        '9b',
+        '9b/b+',
+        '9b+',
+        '9b+/c',
+        '9c'
+      ]
+    }
+  }
+
   const GAP_PX = 1
   const FONT_SIZE = 8
   const PADDING_PX = 1
@@ -116,6 +195,8 @@
   const TICK_H_PX = 11
   const FALLBACK_BG = '#ccc'
   /* ================== */
+
+  let styleMap = {} // { nid: 'sport' | 'boulder' }
 
   const style = document.createElement('style')
   style.textContent = /* css */ `
@@ -212,12 +293,19 @@
       .replace(/\s+/g, '') // remove spaces inside (e.g., '6a +')
       .toLowerCase()
 
-  const pickBandColor = gradeText => {
+  const pickBandColor = (gradeText, nid) => {
     const g = norm(gradeText)
-    for (const key of Object.keys(GRADE_BANDS)) {
-      const band = GRADE_BANDS[key]
-      if (band.grades.map(norm).includes(g)) return band.color
+
+    const bands =
+      styleMap[nid] === 'boulder' ? GRADE_BANDS_BOULDER : GRADE_BANDS_SPORT
+
+    for (const key of Object.keys(bands)) {
+      const band = bands[key]
+      if (band.grades.map(norm).includes(g)) {
+        return band.color
+      }
     }
+
     return FALLBACK_BG
   }
 
@@ -238,6 +326,34 @@
     listMap = {}
     tickMap = {}
     gradeMap = {}
+    styleMap = {}
+
+    document.querySelectorAll('.route[data-nid]').forEach(route => {
+      const nid = route.dataset.nid
+      if (!nid) return
+
+      // 1. Prefer tag detection (cleanest)
+      if (route.querySelector('.tags.boulder')) {
+        styleMap[nid] = 'boulder'
+        return
+      }
+
+      if (route.querySelector('.tags.sport')) {
+        styleMap[nid] = 'sport'
+        return
+      }
+
+      // 2. Fallback: data-route-tick JSON
+      const tickData = route.dataset.routeTick
+      if (tickData) {
+        try {
+          const parsed = JSON.parse(tickData)
+          if (parsed.styleStub) {
+            styleMap[nid] = parsed.styleStub
+          }
+        } catch (e) {}
+      }
+    })
 
     if (SHOW_TICKS) {
       document
@@ -340,13 +456,18 @@
           !container.querySelector(`.topo-grade[data-nid="${nid}"]`)
         ) {
           const grade = gradeMap[nid]
-          const bg = pickBandColor(grade)
+          const bg = pickBandColor(grade, nid)
+
+          const bands =
+            styleMap[nid] === 'boulder'
+              ? GRADE_BANDS_BOULDER
+              : GRADE_BANDS_SPORT
 
           const el = document.createElement('span')
           el.className = 'topo-grade'
           el.dataset.nid = nid
-          el.dataset.band = Object.keys(GRADE_BANDS).find(key =>
-            GRADE_BANDS[key].grades.map(norm).includes(norm(grade))
+          el.dataset.band = Object.keys(bands).find(key =>
+            bands[key].grades.map(norm).includes(norm(grade))
           )
           el.textContent = grade
           el.style.background = bg
