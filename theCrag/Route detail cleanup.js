@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         theCrag – Route detail page cleanup
 // @namespace    https://thecrag.com/
-// @version      1.6
+// @version      1.6.1
 // @description  Hide unneeded sections on route detail pages
 // @match        https://www.thecrag.com/es/escalar/*/route/*
 // @match        https://www.thecrag.com/en/climbing/*/route/*
@@ -48,24 +48,22 @@
   function addRouteNavigationArrows () {
     if (!CONFIG.addRouteNavigationArrows) return
 
-    // Avoid duplicate insertion
-    if (document.querySelector('.tc-route-nav')) return
+    // prevent duplicate insertion
+    if (document.querySelector('.tc-route-nav-li')) return
 
     const prevLink = document.querySelector("a[rel='prev']")
     const nextLink = document.querySelector("a[rel='next']")
 
     if (!prevLink && !nextLink) return
 
-    // Insert after popularity link inside H1
-    const popularityLink = document.querySelector('h1 .pop')
-    if (!popularityLink) return
+    const statsUl = document.querySelector('.headline__guts ul.stats')
+    if (!statsUl) return
 
-    const container = document.createElement('span')
-    container.className = 'tc-route-nav'
-    container.style.display = 'inline-flex'
-    container.style.gap = '6px'
-    container.style.marginLeft = '10px'
-    container.style.verticalAlign = 'middle'
+    const li = document.createElement('li')
+    li.className = 'tc-route-nav-li'
+    li.style.display = 'flex'
+    li.style.alignItems = 'center'
+    li.style.gap = '8px'
 
     function createArrow (href, symbol, title) {
       const a = document.createElement('a')
@@ -73,39 +71,34 @@
       a.textContent = symbol
       a.title = title
 
-      a.style.display = 'inline-block'
-      a.style.padding = '2px 6px'
-      a.style.fontSize = '14px'
       a.style.fontWeight = 'bold'
+      a.style.fontSize = '16px'
       a.style.textDecoration = 'none'
-      a.style.borderRadius = '4px'
-      a.style.background = 'rgba(0,0,0,0.08)'
+      a.style.padding = '0 4px'
       a.style.color = 'inherit'
-      a.style.lineHeight = '1.2'
-      a.style.transition = 'background 0.15s ease'
+      a.style.opacity = '0.7'
+      a.style.transition = 'opacity 0.15s ease'
 
       a.addEventListener('mouseenter', () => {
-        a.style.background = 'rgba(0,0,0,0.18)'
+        a.style.opacity = '1'
       })
       a.addEventListener('mouseleave', () => {
-        a.style.background = 'rgba(0,0,0,0.08)'
+        a.style.opacity = '0.7'
       })
 
       return a
     }
 
     if (prevLink) {
-      container.appendChild(createArrow(prevLink.href, '←', 'Previous route'))
+      li.appendChild(createArrow(prevLink.href, '←', 'Previous route'))
     }
 
     if (nextLink) {
-      container.appendChild(createArrow(nextLink.href, '→', 'Next route'))
+      li.appendChild(createArrow(nextLink.href, '→', 'Next route'))
     }
 
-    popularityLink.parentNode.insertBefore(
-      container,
-      popularityLink.nextSibling
-    )
+    // insert as FIRST item before "Contexto de grado"
+    statsUl.insertBefore(li, statsUl.firstElementChild)
   }
 
   /* ==================== BETA (Ethics) SECTION ==================== */
