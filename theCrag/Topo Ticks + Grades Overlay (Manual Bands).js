@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         theCrag Topo Ticks + Grades Overlay (Manual Bands)
 // @namespace    https://thecrag.com/
-// @version      2.4
+// @version      2.4.1
 // @description  Show compact grade boxes with user-defined color bands + tick icons
 // @match        https://www.thecrag.com/es/escalar/*
 // @match        https://www.thecrag.com/en/climbing/*
@@ -373,10 +373,19 @@
     if (SHOW_GRADES) {
       document.querySelectorAll('.sticky-header').forEach(header => {
         const checkbox = header.querySelector('input[name="D:AscentNodeID"]')
-        const gradeSpan = header.querySelector('.r-grade span[class*="gb"]')
+        // Look specifically for the base system span first
+        let gradeSpan = header.querySelector('.grade-base-sys')
+
+        // Fallback to the generic gb2 span if the specific one isn't found
+        if (!gradeSpan) {
+          gradeSpan = header.querySelector('.r-grade span[class*="gb"]')
+        }
+
         if (!checkbox || !gradeSpan) return
         const nid = checkbox.value?.trim()
         if (!nid) return
+
+        // Use textContent on the specific span found
         gradeMap[nid] = gradeSpan.textContent.trim()
       })
     }
