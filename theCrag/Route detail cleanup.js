@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         theCrag – Route detail page cleanup
 // @namespace    https://thecrag.com/
-// @version      1.6.2
+// @version      1.6.3
 // @description  Hide unneeded sections on route detail pages
 // @match        https://www.thecrag.com/es/escalar/*/route/*
 // @match        https://www.thecrag.com/en/climbing/*/route/*
@@ -41,6 +41,29 @@
 
   function $all (sel, root) {
     return Array.prototype.slice.call((root || document).querySelectorAll(sel))
+  }
+
+  /* ==================== REMOVE CONTEXTO DE GRADO ==================== */
+
+  function removeContextoDeGrado () {
+    const statsUl = document.querySelector('.headline__guts ul.stats')
+    if (!statsUl) return
+
+    const items = Array.from(statsUl.querySelectorAll('li'))
+
+    items.forEach(li => {
+      const strong = li.querySelector('strong')
+      if (!strong) return
+
+      const label = strong.textContent.trim().toLowerCase()
+
+      if (
+        label.includes('contexto de grado') ||
+        label.includes('grade context')
+      ) {
+        li.remove()
+      }
+    })
   }
 
   /* ==================== ROUTE PREV/NEXT ARROWS ==================== */
@@ -443,6 +466,7 @@
   /* ==================== RUN ==================== */
 
   function init () {
+    removeContextoDeGrado()
     addRouteNavigationArrows()
     removeBetaSection()
     hideEmptyRouteHistory()
