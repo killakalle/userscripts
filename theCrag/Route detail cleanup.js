@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         theCrag – Route detail page cleanup
 // @namespace    https://thecrag.com/
-// @version      1.6.1
+// @version      1.6.2
 // @description  Hide unneeded sections on route detail pages
 // @match        https://www.thecrag.com/es/escalar/*/route/*
 // @match        https://www.thecrag.com/en/climbing/*/route/*
@@ -48,12 +48,11 @@
   function addRouteNavigationArrows () {
     if (!CONFIG.addRouteNavigationArrows) return
 
-    // prevent duplicate insertion
+    // prevent duplicates (init runs twice)
     if (document.querySelector('.tc-route-nav-li')) return
 
     const prevLink = document.querySelector("a[rel='prev']")
     const nextLink = document.querySelector("a[rel='next']")
-
     if (!prevLink && !nextLink) return
 
     const statsUl = document.querySelector('.headline__guts ul.stats')
@@ -61,9 +60,7 @@
 
     const li = document.createElement('li')
     li.className = 'tc-route-nav-li'
-    li.style.display = 'flex'
-    li.style.alignItems = 'center'
-    li.style.gap = '8px'
+    li.style.marginRight = '12px' // spacing before Contexto
 
     function createArrow (href, symbol, title) {
       const a = document.createElement('a')
@@ -74,16 +71,16 @@
       a.style.fontWeight = 'bold'
       a.style.fontSize = '16px'
       a.style.textDecoration = 'none'
-      a.style.padding = '0 4px'
+      a.style.marginRight = '6px'
+      a.style.opacity = '0.75'
       a.style.color = 'inherit'
-      a.style.opacity = '0.7'
       a.style.transition = 'opacity 0.15s ease'
 
       a.addEventListener('mouseenter', () => {
         a.style.opacity = '1'
       })
       a.addEventListener('mouseleave', () => {
-        a.style.opacity = '0.7'
+        a.style.opacity = '0.75'
       })
 
       return a
@@ -97,7 +94,7 @@
       li.appendChild(createArrow(nextLink.href, '→', 'Next route'))
     }
 
-    // insert as FIRST item before "Contexto de grado"
+    // Insert as first stat item (inline with others)
     statsUl.insertBefore(li, statsUl.firstElementChild)
   }
 
