@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         theCrag – Route detail page cleanup
 // @namespace    https://thecrag.com/
-// @version      1.5.2
+// @version      1.6
 // @description  Hide unneeded sections on route detail pages
 // @match        https://www.thecrag.com/es/escalar/*/route/*
 // @match        https://www.thecrag.com/en/climbing/*/route/*
@@ -19,6 +19,7 @@
   /* ==================== CONFIG ==================== */
 
   const CONFIG = {
+    addRouteNavigationArrows: true,
     removeBetaSection: true,
     hideEmptyRouteHistory: true,
     removeWarningsSection: true,
@@ -29,7 +30,7 @@
     removeSeasonalitySection: true,
     removeChartSummarySentences: true,
     removeTicktypesSection: true,
-    removeKeywordCloud: true // <--- NEW
+    removeKeywordCloud: true
   }
 
   /* ==================== HELPERS ==================== */
@@ -40,6 +41,71 @@
 
   function $all (sel, root) {
     return Array.prototype.slice.call((root || document).querySelectorAll(sel))
+  }
+
+  /* ==================== ROUTE PREV/NEXT ARROWS ==================== */
+
+  function addRouteNavigationArrows () {
+    if (!CONFIG.addRouteNavigationArrows) return
+
+    // Avoid duplicate insertion
+    if (document.querySelector('.tc-route-nav')) return
+
+    const prevLink = document.querySelector("a[rel='prev']")
+    const nextLink = document.querySelector("a[rel='next']")
+
+    if (!prevLink && !nextLink) return
+
+    // Insert after popularity link inside H1
+    const popularityLink = document.querySelector('h1 .pop')
+    if (!popularityLink) return
+
+    const container = document.createElement('span')
+    container.className = 'tc-route-nav'
+    container.style.display = 'inline-flex'
+    container.style.gap = '6px'
+    container.style.marginLeft = '10px'
+    container.style.verticalAlign = 'middle'
+
+    function createArrow (href, symbol, title) {
+      const a = document.createElement('a')
+      a.href = href
+      a.textContent = symbol
+      a.title = title
+
+      a.style.display = 'inline-block'
+      a.style.padding = '2px 6px'
+      a.style.fontSize = '14px'
+      a.style.fontWeight = 'bold'
+      a.style.textDecoration = 'none'
+      a.style.borderRadius = '4px'
+      a.style.background = 'rgba(0,0,0,0.08)'
+      a.style.color = 'inherit'
+      a.style.lineHeight = '1.2'
+      a.style.transition = 'background 0.15s ease'
+
+      a.addEventListener('mouseenter', () => {
+        a.style.background = 'rgba(0,0,0,0.18)'
+      })
+      a.addEventListener('mouseleave', () => {
+        a.style.background = 'rgba(0,0,0,0.08)'
+      })
+
+      return a
+    }
+
+    if (prevLink) {
+      container.appendChild(createArrow(prevLink.href, '←', 'Previous route'))
+    }
+
+    if (nextLink) {
+      container.appendChild(createArrow(nextLink.href, '→', 'Next route'))
+    }
+
+    popularityLink.parentNode.insertBefore(
+      container,
+      popularityLink.nextSibling
+    )
   }
 
   /* ==================== BETA (Ethics) SECTION ==================== */
@@ -387,6 +453,7 @@
   /* ==================== RUN ==================== */
 
   function init () {
+    addRouteNavigationArrows()
     removeBetaSection()
     hideEmptyRouteHistory()
     removeWarningsSection()
