@@ -43,6 +43,14 @@
     return Array.prototype.slice.call((root || document).querySelectorAll(sel))
   }
 
+  function removeAggregateRatingDiv () {
+    const statsUl = document.querySelector('.headline__guts ul.stats')
+    if (!statsUl) return
+
+    const div = statsUl.querySelector('div[itemprop="aggregateRating"]')
+    if (div) div.remove()
+  }
+
   /* ==================== REMOVE CONTEXTO DE GRADO ==================== */
 
   function removeContextoDeGrado () {
@@ -467,6 +475,7 @@
 
   function init () {
     removeContextoDeGrado()
+    removeAggregateRatingDiv()
     addRouteNavigationArrows()
     removeBetaSection()
     hideEmptyRouteHistory()
@@ -478,7 +487,7 @@
     removeSeasonalitySection()
     removeChartSummarySentences()
     removeTicktypesSection()
-    removeKeywordCloudSection() // <--- NEW
+    removeKeywordCloudSection()
   }
 
   init()
