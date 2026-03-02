@@ -11,6 +11,9 @@
 // @grant        none
 // @license      MIT
 // @icon         https://www.google.com/s2/favicons?domain=thecrag.com
+// @downloadURL  https://greasyfork.org/en/scripts/568094-thecrag-area-crag-page-cleanup
+// @updateURL    https://greasyfork.org/en/scripts/568094-thecrag-area-crag-page-cleanup
+
 // ==/UserScript==
 
 ;(function () {
