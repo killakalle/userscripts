@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         theCrag - Icon Replacer
 // @namespace    http://tampermonkey.net/
-// @version      1.3
+// @version      1.3.1
 // @description  Replace icons on theCrag dashboard stream with other elements
 // @author       You
 // @match        https://www.thecrag.com/
