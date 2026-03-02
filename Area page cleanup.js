@@ -9,6 +9,7 @@
 // @exclude      https://www.thecrag.com/en/climbing/*/route/*
 // @run-at       document-end
 // @grant        none
+// @license      MIT
 // @icon         https://www.google.com/s2/favicons?domain=thecrag.com
 // ==/UserScript==
 
