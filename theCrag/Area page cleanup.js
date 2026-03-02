@@ -1,8 +1,8 @@
 // ==UserScript==
 // @name         theCrag – Area/Crag page cleanup
 // @namespace    https://thecrag.com/
-// @version      1.1
-// @description  Hide unneeded sections and auto-expand descriptions on crag/area overview pages
+// @version      1.2
+// @description  Hide unneeded sections, internal tags, and auto-expand descriptions on crag/area overview pages
 // @match        https://www.thecrag.com/es/escalar/*
 // @match        https://www.thecrag.com/en/climbing/*
 // @exclude      https://www.thecrag.com/es/escalar/*/route/*
@@ -13,7 +13,6 @@
 // @icon         https://www.google.com/s2/favicons?domain=thecrag.com
 // @downloadURL  https://greasyfork.org/en/scripts/568094-thecrag-area-crag-page-cleanup
 // @updateURL    https://greasyfork.org/en/scripts/568094-thecrag-area-crag-page-cleanup
-
 // ==/UserScript==
 
 ;(function () {
@@ -25,7 +24,8 @@
     removePlanYourTrip: true,
     removeShareSection: true,
     removeSponsors: true,
-    autoExpandDescription: true // <--- NEW
+    autoExpandDescription: true,
+    hideInternalTags: true
   }
 
   /* ==================== HELPERS ==================== */
@@ -36,6 +36,26 @@
 
   function $all (sel, root) {
     return Array.prototype.slice.call((root || document).querySelectorAll(sel))
+  }
+
+  /* ==================== HIDE INTERNAL ROUTE TAGS ==================== */
+
+  function hideInternalTags () {
+    if (!CONFIG.hideInternalTags) return
+
+    const TAGS_TO_HIDE = [
+      '#double_anchors',
+      '#bolt_diameter_12mm',
+      '#bolt_type_expansion',
+      '#bolt_material_bi_chrome'
+    ]
+
+    $all('a.tags').forEach(tag => {
+      const text = tag.textContent.trim()
+      if (TAGS_TO_HIDE.includes(text)) {
+        tag.remove()
+      }
+    })
   }
 
   /* ==================== PLANIFICA TU VIAJE SECTION ==================== */
@@ -65,14 +85,11 @@
   function autoExpandDescription () {
     if (!CONFIG.autoExpandDescription) return
 
-    // Target the description container that has the 'expandable' class
     const expandableDiv = $('.node-info.description.expandable')
 
     if (expandableDiv) {
-      // 1. Remove the 'expandable' class to show full height
       expandableDiv.classList.remove('expandable')
 
-      // 2. Remove the "Show more" (Mostrar más) button container
       const moreBtn = expandableDiv.querySelector('.comment-more')
       if (moreBtn) {
         moreBtn.remove()
@@ -137,8 +154,9 @@
   /* ==================== RUN ==================== */
 
   function init () {
+    hideInternalTags() // <--- NEW
     removePlanYourTrip()
-    autoExpandDescription() // <--- NEW
+    autoExpandDescription()
     removeShareSection()
     removeSponsors()
   }

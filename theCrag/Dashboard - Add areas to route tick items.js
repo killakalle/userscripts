@@ -1,17 +1,17 @@
 // ==UserScript==
 // @name         theCrag - Dashboard - Add areas to route tick items
 // @namespace    http://tampermonkey.net/
-// @version      0.7
+// @version      0.7.1
 // @description  Adds a route's area to tick items in the stream
 // @author       killakalle
 // @match        https://www.thecrag.com/
 // @match        https://www.thecrag.com/dashboard*
-// @icon    	 https://www.google.com/s2/favicons?domain=thecrag.com
+// @icon    	   https://www.google.com/s2/favicons?domain=thecrag.com
 // @grant        none
 // @license      MIT
 // @downloadURL  https://greasyfork.org/en/scripts/429706-thecrag-dashboard-add-areas-to-route-tick-items
 // @updateURL    https://greasyfork.org/en/scripts/429706-thecrag-dashboard-add-areas-to-route-tick-items
-// @run-at 		 document-idle
+// @run-at 		   document-idle
 // ==/UserScript==
 
 function getLastArea (title) {
