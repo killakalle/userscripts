@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         theCrag – Area/Crag page cleanup
 // @namespace    https://thecrag.com/
-// @version      1.2
+// @version      1.2.1
 // @description  Hide unneeded sections, internal tags, and auto-expand descriptions on crag/area overview pages
 // @match        https://www.thecrag.com/es/escalar/*
 // @match        https://www.thecrag.com/en/climbing/*
@@ -45,8 +45,10 @@
 
     const TAGS_TO_HIDE = [
       '#double_anchors',
+      '#bolt_diameter_10mm',
       '#bolt_diameter_12mm',
       '#bolt_type_expansion',
+      '#bolt_type_glue_in',
       '#bolt_material_bi_chrome'
     ]
 
