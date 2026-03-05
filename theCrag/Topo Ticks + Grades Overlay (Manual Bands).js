@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         theCrag Topo Ticks + Grades Overlay (Manual Bands)
 // @namespace    https://thecrag.com/
-// @version      2.5.1
+// @version      2.5.2
 // @description  Show compact grade boxes with user-defined color bands + tick icons
 // @match        https://www.thecrag.com/es/escalar/*
 // @match        https://www.thecrag.com/en/climbing/*
@@ -9,8 +9,8 @@
 // @run-at       document-end
 // @grant        none
 // @license MIT
-// @downloadURL https://update.greasyfork.org/scripts/555663/theCrag%20Topo%20Ticks%20%2B%20Grades%20Overlay%20%28Manual%20Bands%29.user.js
-// @updateURL https://update.greasyfork.org/scripts/555663/theCrag%20Topo%20Ticks%20%2B%20Grades%20Overlay%20%28Manual%20Bands%29.meta.js
+// @downloadURL  https://update.greasyfork.org/scripts/555663/theCrag%20Topo%20Ticks%20%2B%20Grades%20Overlay%20%28Manual%20Bands%29.user.js
+// @updateURL    https://update.greasyfork.org/scripts/555663/theCrag%20Topo%20Ticks%20%2B%20Grades%20Overlay%20%28Manual%20Bands%29.meta.js
 // ==/UserScript==
 
 ;(function () {
@@ -400,23 +400,24 @@
     })
 
     if (SHOW_TICKS) {
-      // iterate through tick containers on routes rather than selecting
-      // inner icon classes directly.  this allows us to filter out empty
-      // placeholders (the "ghost ticks" the other script complained about)
       document.querySelectorAll('.route .tick').forEach(tickContainer => {
         const route = tickContainer.closest('.route')
         const nid = route?.dataset.nid
         if (!nid) return
 
-        // find the element that actually has the tick_* class
+        // 1. Find the icon element first
         const tickIcon = tickContainer.querySelector('[class^="tick_"]')
         if (!tickIcon) return
 
-        // skip unticked routes (the empty placeholder icon for adding ticks)
+        // 2. Check for Non-Lead status using your modern tags + original classes
+        const isNonLead = !!tickIcon.querySelector(
+          '.tag-tr, .tag-sd, .tags.second, .tags.toprope'
+        )
+
+        // 3. Skip unticked routes
         if (tickIcon.classList.contains('tick_unticked')) return
 
-        // skip if the icon has no background image and isn't the special
-        // dog icon which uses colours
+        // 4. Validate background or special 'dog' status
         const computed = window.getComputedStyle(tickIcon)
         if (
           computed.backgroundImage === 'none' &&
@@ -426,12 +427,9 @@
 
         const typeMatch = tickIcon.className.match(/tick_[a-z]+/)
         if (typeMatch) {
-          const isNonLead = !!tickIcon.querySelector(
-            '.tags.second, .tags.toprope'
-          )
           tickMap[nid] = {
             className: typeMatch[0],
-            isNonLead,
+            isNonLead: isNonLead, // Use the check we performed in step 2
             bgImage: computed.backgroundImage
           }
         }
