@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name        theCrag - Replace ascent icons
 // @namespace   http://tampermonkey.net/
-// @version     0.2.1
+// @version     0.2.3
 // @description Replace ascent icons because they are hard to distinguish
 // @author      killakalle
 // @match       https://www.thecrag.com/
@@ -17,48 +17,82 @@
 ;(function () {
   'use strict'
 
-  // Define the mapping of selectors to their replacement text and classes
+  // 1. Inject the Slim Modern CSS
+  const style = document.createElement('style')
+  style.textContent = `
+    .modern-tag {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 14px;
+        height: 16px;
+        border-radius: 2px;
+        
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+        font-size: 10px;
+        font-weight: 500; 
+        color: #fff !important;
+        line-height: 1;
+        
+        /* APPLYING YOUR REQUESTED POSITIONING */
+        position: relative;
+        left: 21px;
+    }
+    
+    /* T - Top Rope: Using a deep purple-blue that fits the 'tide' vibe */
+    .tag-tr { background-color: #cc44cc; } 
+    
+    /* S - Second: A mid-tone blue from your theme's spectrum */
+    .tag-sd { background-color: #cc44cc; } 
+    
+    /* L - Lead: Your theme's primary accent color (Teal) */
+    .tag-ld { background-color: #409496; }
+  `
+  document.head.appendChild(style)
+
   const ICON_MAP = [
-    { selector: '.gear-style-top-rope', text: 'T', className: 'tags toprope' },
-    { selector: '.gear-style-second', text: 'S', className: 'tags second' },
-    { selector: '.gear-style-sport', text: 'L', className: 'tags sport' }
+    {
+      selector: '.gear-style-top-rope',
+      text: 'T',
+      className: 'modern-tag tag-tr tags toprope'
+    },
+    {
+      selector: '.gear-style-second',
+      text: 'S',
+      className: 'modern-tag tag-sd tags second'
+    },
+    {
+      selector: '.gear-style-sport',
+      text: 'L',
+      className: 'modern-tag tag-ld tags sport'
+    }
   ]
 
   function replaceElements () {
     ICON_MAP.forEach(({ selector, text, className }) => {
-      // Find the specific gear-style spans
+      // Look for the gear-style spans
       const elements = document.querySelectorAll(
         `span.gear-style-with-tick${selector}`
       )
 
       elements.forEach(element => {
-        const newElement = document.createElement('span')
-        newElement.className = className
+        // Only replace if it's the original site element (prevents infinite loops with observer)
+        if (element.classList.contains('gear-style-with-tick')) {
+          const newElement = document.createElement('span')
+          newElement.className = className
+          newElement.textContent = text
 
-        // RESTORED ORIGINAL STYLING
-        newElement.style.position = 'relative'
-        newElement.style.left = '20px'
-
-        newElement.textContent = text
-
-        // Replace old element with new one
-        element.parentNode.replaceChild(newElement, element)
+          // Replace old element with new one
+          element.parentNode.replaceChild(newElement, element)
+        }
       })
     })
   }
 
-  // 1. Run immediately on page load
+  // Initial Run
   replaceElements()
 
-  // 2. Watch for new items (like in the Dashboard stream or infinite scroll)
-  const observer = new MutationObserver(mutations => {
-    // Small delay to ensure the DOM is ready for the replacement
-    replaceElements()
-  })
-
-  // Start observing the body for added nodes
-  observer.observe(document.body, {
-    childList: true,
-    subtree: true
-  })
+  // Watch for new elements (Dashboard/Infinite Scroll)
+  const observer = new MutationObserver(() => replaceElements())
+  observer.observe(document.body, { childList: true, subtree: true })
 })()

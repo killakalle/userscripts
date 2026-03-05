@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         theCrag – Area/Crag page cleanup
 // @namespace    https://thecrag.com/
-// @version      1.2.2
+// @version      1.2.3
 // @description  Hide unneeded sections, internal tags, and auto-expand descriptions on crag/area overview pages
 // @match        https://www.thecrag.com/es/escalar/*
 // @match        https://www.thecrag.com/en/climbing/*
@@ -25,7 +25,8 @@
     removeShareSection: true,
     removeSponsors: true,
     autoExpandDescription: true,
-    hideInternalTags: true
+    hideInternalTags: true,
+    hideUntickedIcons: true
   }
 
   /* ==================== HELPERS ==================== */
@@ -154,14 +155,30 @@
     )
   }
 
+  /* ==================== HIDE UNTICKED ICONS ==================== */
+
+  function hideUntickedIcons () {
+    // Select the specific unticked span
+    const untickedIcons = $all('.tick .tick_unticked')
+
+    untickedIcons.forEach(icon => {
+      // Option A: Hide only the icon (retains the clickable area)
+      // icon.style.display = 'none'
+
+      // Option B (Cleaner): Remove the entire link/placeholder
+      icon.closest('.tick').innerHTML = ''
+    })
+  }
+
   /* ==================== RUN ==================== */
 
   function init () {
-    hideInternalTags() // <--- NEW
+    hideInternalTags()
     removePlanYourTrip()
     autoExpandDescription()
     removeShareSection()
     removeSponsors()
+    hideUntickedIcons()
   }
 
   init()
