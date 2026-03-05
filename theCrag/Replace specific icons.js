@@ -1,13 +1,15 @@
 // ==UserScript==
 // @name        theCrag - Replace ascent icons
 // @namespace   http://tampermonkey.net/
-// @version     0.2
+// @version     0.2.1
 // @description Replace ascent icons because they are hard to distinguish
 // @author      killakalle
 // @match       https://www.thecrag.com/
 // @match       https://www.thecrag.com/dashboard
 // @match       https://www.thecrag.com/*/escalar/*
 // @icon        https://www.google.com/s2/favicons?domain=thecrag.com
+// @downloadURL https://update.greasyfork.org/scripts/568554/theCrag%20-%20Replace%20ascent%20icons.user.js
+// @updateURL   https://update.greasyfork.org/scripts/568554/theCrag%20-%20Replace%20ascent%20icons.meta.js
 // @license     MIT
 // @grant       none
 // ==/UserScript==
