@@ -4,7 +4,9 @@
 // @version     0.2
 // @description Replace ascent icons because they are hard to distinguish
 // @author      killakalle
-// @match       *://www.thecrag.com/*/escalar/*
+// @match       https://www.thecrag.com/
+// @match       https://www.thecrag.com/dashboard
+// @match       https://www.thecrag.com/*/escalar/*
 // @icon        https://www.google.com/s2/favicons?domain=thecrag.com
 // @license     MIT
 // @grant       none
@@ -43,8 +45,18 @@
     })
   }
 
-  // Run on page load
-  if (window.location.href.indexOf('/escalar/') !== -1) {
+  // 1. Run immediately on page load
+  replaceElements()
+
+  // 2. Watch for new items (like in the Dashboard stream or infinite scroll)
+  const observer = new MutationObserver(mutations => {
+    // Small delay to ensure the DOM is ready for the replacement
     replaceElements()
-  }
+  })
+
+  // Start observing the body for added nodes
+  observer.observe(document.body, {
+    childList: true,
+    subtree: true
+  })
 })()
