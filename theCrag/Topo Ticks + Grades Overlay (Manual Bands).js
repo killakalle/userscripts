@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         theCrag Topo Ticks + Grades Overlay (Manual Bands)
 // @namespace    https://thecrag.com/
-// @version      2.5.2
+// @version      2.5.3
 // @description  Show compact grade boxes with user-defined color bands + tick icons
 // @match        https://www.thecrag.com/es/escalar/*
 // @match        https://www.thecrag.com/en/climbing/*
@@ -61,7 +61,7 @@
         '5b',
         '5b+',
         '5c',
-        '5c/c+',
+        '5c/+',
         '5c+',
         '5c+/6a',
         '6a'
@@ -73,15 +73,15 @@
         '6a+',
         '6a+/b',
         '6b',
-        '6b/b+',
+        '6b/+',
         '6b+',
         '6b+/c',
         '6c',
-        '6c/c+',
+        '6c/+',
         '6c+',
         '6c+/7a',
         '7a',
-        '7a/a+',
+        '7a/+',
         '7a+'
       ]
     },
@@ -90,19 +90,19 @@
       grades: [
         '7a+/b',
         '7b',
-        '7b/b+',
+        '7b/+',
         '7b+',
         '7b+/c',
         '7c',
-        '7c/c+',
+        '7c/+',
         '7c+',
         '7c+/8a',
         '8a',
-        '8a/a+',
+        '8a/+',
         '8a+',
         '8a+/b',
         '8b',
-        '8b/b+',
+        '8b/+',
         '8b+'
       ]
     },
@@ -110,15 +110,15 @@
       color: '#aa1d7b',
       grades: [
         '8c',
-        '8c/c+',
+        '8c/+',
         '8c+',
         '8c+/9a',
         '9a',
-        '9a/a+',
+        '9a/+',
         '9a+',
         '9a+/b',
         '9b',
-        '9b/b+',
+        '9b/+',
         '9b+',
         '9b+/c',
         '9c'
