@@ -1,8 +1,8 @@
 // ==UserScript==
 // @name         theCrag - Topo Ticks + Grades Overlay (Manual Bands)
 // @namespace    https://thecrag.com/
-// @version      2.6.2
-// @description  Show compact grade boxes with user-defined color bands + tick icons
+// @version      2.7
+// @description  Show grades, tick icons and list indicators directly on topo.
 // @match        https://www.thecrag.com/es/escalar/*
 // @match        https://www.thecrag.com/en/climbing/*
 // @icon         https://www.google.com/s2/favicons?domain=thecrag.com
@@ -17,12 +17,11 @@
 ;(function () {
   'use strict'
 
-  /* ===== CONFIGURATION ===== */
-  const SHOW_LIST_ICON = true
-  const SHOW_GRADES = true
-  const SHOW_TICKS = true
-  const PURPLE_HIGHLIGHT = '#bb44ff'
-  const FALLBACK_BG = '#ccc'
+  const SHOW_LIST_ICON = true,
+    SHOW_GRADES = true,
+    SHOW_TICKS = true
+  const PURPLE_HIGHLIGHT = '#bb44ff',
+    FALLBACK_BG = '#ccc'
 
   const GRADE_BANDS = {
     beginner: { min: 0, max: 302, color: '#53b41c', textColor: '#000' },
@@ -32,7 +31,6 @@
     elite: { min: 1203, max: 2000, color: '#b21882', textColor: '#fff' }
   }
 
-  /* ===== UNIVERSAL GRADE PARSER ===== */
   const GradeParser = {
     frenchMilestones: {
       '3a': 204,
@@ -180,24 +178,11 @@
     }
   }
 
-  /* ===== STYLES ===== */
   const style = document.createElement('style')
   style.textContent = `
     .topo-tick { position: absolute; width: 11px; height: 11px; background-size: contain; background-repeat: no-repeat; transform: translate(-50%, 0); pointer-events: none; z-index: 5; }
     .topo-tick.is-non-lead { box-shadow: 0 0 0 1.2px ${PURPLE_HIGHLIGHT}, 0 0 2px ${PURPLE_HIGHLIGHT} !important; border-radius: 2px; background-color: rgba(255,255,255,0.8); }
-    
-    /* RESTORED OLD HANGDOG STYLE */
-    .topo-tick.tick_dog {
-      background-color: #c09b7a;
-      border: 1px solid rgba(0,0,0,0.25);
-      border-radius: 50%;
-      padding: 1px;
-      box-shadow: 0 0 2px rgba(0,0,0,0.25);
-      box-sizing: content-box;
-      transform: translate(-50%, 0) scale(0.75);
-      transform-origin: center top;
-    }
-
+    .topo-tick.tick_dog { background-color: #c09b7a; border: 1px solid rgba(0,0,0,0.25); border-radius: 50%; padding: 1px; box-shadow: 0 0 2px rgba(0,0,0,0.25); box-sizing: content-box; transform: translate(-50%, 0) scale(0.75); transform-origin: center top; }
     .topo-grade { position: absolute; font-size: 8px; line-height: 9px; border-radius: 2px; text-align: center; transform: translate(-50%, 0); pointer-events: none; z-index: 5; white-space: nowrap; border: 1.1px solid #000 !important; font-weight: 800; padding: 0 1px; }
     .topo-listicon { position: absolute; width: 5px; height: 5px; border-radius: 50%; background: #419496; border: 1px solid #000; transform: translate(-50%, 0); pointer-events: none; z-index: 6; }
     .phototopo { margin-bottom: 20px !important; position: relative; }
@@ -206,7 +191,6 @@
   `
   document.head.appendChild(style)
 
-  /* ===== CORE LOGIC ===== */
   let styleMap = {},
     tickMap = {},
     gradeMap = {},
@@ -218,6 +202,8 @@
     tickMap = {}
     gradeMap = {}
     styleMap = {}
+
+    // Hybrid Scraper
     document.querySelectorAll('.route[data-nid]').forEach(route => {
       const nid = route.dataset.nid
       styleMap[nid] = route.querySelector('.tags.boulder') ? 'boulder' : 'sport'
@@ -231,19 +217,15 @@
         const tickIcon = tickContainer.querySelector('[class^="tick_"]')
         if (!nid || !tickIcon || tickIcon.classList.contains('tick_unticked'))
           return
-
         const isNonLead = !!tickIcon.querySelector(
           '.tag-tr, .tag-sd, .tags.second, .tags.toprope'
         )
         const computed = window.getComputedStyle(tickIcon)
-
-        // VALIDATION: Allow tick_dog even if background image is missing
         if (
           computed.backgroundImage === 'none' &&
           !tickIcon.classList.contains('tick_dog')
         )
           return
-
         const typeMatch = tickIcon.className.match(/tick_[a-z]+/)
         if (typeMatch)
           tickMap[nid] = {
@@ -265,6 +247,24 @@
         if (nid && gradeSpan) gradeMap[nid] = gradeSpan.textContent.trim()
       })
     }
+
+    // Route Detail Page Fallback (Parse JSON Topo Data)
+    document.querySelectorAll('.phototopo[data-topodata]').forEach(topoDiv => {
+      try {
+        const data = JSON.parse(topoDiv.dataset.topodata)
+        data.forEach(item => {
+          if (item.type === 'route' && item.id && item.grade) {
+            const nid = item.id.toString()
+            if (!gradeMap[nid]) gradeMap[nid] = item.grade
+            if (!styleMap[nid])
+              styleMap[nid] =
+                item.style && item.style.toLowerCase() === 'boulder'
+                  ? 'boulder'
+                  : 'sport'
+          }
+        })
+      } catch (e) {}
+    })
   }
 
   function renderOverlays () {
