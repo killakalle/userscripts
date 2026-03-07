@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         theCrag - Topo Ticks + Grades Overlay (Manual Bands)
 // @namespace    https://thecrag.com/
-// @version      2.6.1
+// @version      2.6.2
 // @description  Show compact grade boxes with user-defined color bands + tick icons
 // @match        https://www.thecrag.com/es/escalar/*
 // @match        https://www.thecrag.com/en/climbing/*
@@ -26,8 +26,8 @@
 
   const GRADE_BANDS = {
     beginner: { min: 0, max: 302, color: '#53b41c', textColor: '#000' },
-    intermediate: { min: 303, max: 602, color: '#ffe100', textColor: '#000' },
-    experienced: { min: 603, max: 902, color: '#e58329', textColor: '#000' },
+    intermediate: { min: 303, max: 380, color: '#ffe100', textColor: '#000' },
+    experienced: { min: 381, max: 902, color: '#e58329', textColor: '#000' },
     expert: { min: 903, max: 1202, color: '#c90909', textColor: '#fff' },
     elite: { min: 1203, max: 2000, color: '#b21882', textColor: '#fff' }
   }
@@ -78,7 +78,6 @@
       '9c': 1461,
       '10a': 1650
     },
-
     ydsMilestones: {
       5.5: 264,
       5.6: 303,
@@ -97,9 +96,9 @@
       '5.12b': 903,
       '5.13a': 1017,
       '5.14a': 1167,
+      '5.14b': 1203,
       '5.15a': 1332
     },
-
     ewbankMilestones: {
       12: 279,
       13: 303,
@@ -119,8 +118,6 @@
       30: 1092,
       33: 1203
     },
-
-    // theCrag uses Arabic UIAA (1, 2, 3... 9-)
     uiaaMilestones: {
       3: 195,
       '3+': 222,
@@ -153,25 +150,15 @@
     getScore: function (str) {
       if (!str) return -1
       let clean = str.toString().trim().toLowerCase().replace(/\s+/g, '')
-
-      // Heuristic detection
       if (clean.startsWith('5.')) return this.ydsMilestones[clean] || -1
-
-      // If it's a number followed by - or + (UIAA / Ewbank)
       if (/^\d+[+-]?$/.test(clean)) {
-        // theCrag UIAA milestones (10-, 9+, etc.) take priority for these strings
         if (this.uiaaMilestones[clean]) return this.uiaaMilestones[clean]
         return this.ewbankMilestones[clean] || -1
       }
-
-      // Default to French milestones
       if (this.frenchMilestones[clean]) return this.frenchMilestones[clean]
-
-      // Slash/Interpolation logic
       if (clean.includes('/')) {
         let parts = clean.split('/')
         let s1 = this.getScore(parts[0])
-        // French shorthand fix
         if (
           parts[1].length <= 2 &&
           !/\d/.test(parts[1]) &&
@@ -182,7 +169,6 @@
         let s2 = this.getScore(parts[1])
         return s1 > 0 && s2 > 0 ? (s1 + s2) / 2 : s1 || s2 || -1
       }
-
       return -1
     },
 
@@ -194,17 +180,24 @@
     }
   }
 
-  /* ===== CORE RENDERING LOGIC ===== */
-  let styleMap = {},
-    tickMap = {},
-    gradeMap = {},
-    listMap = {},
-    hasRendered = false
-
+  /* ===== STYLES ===== */
   const style = document.createElement('style')
   style.textContent = `
     .topo-tick { position: absolute; width: 11px; height: 11px; background-size: contain; background-repeat: no-repeat; transform: translate(-50%, 0); pointer-events: none; z-index: 5; }
     .topo-tick.is-non-lead { box-shadow: 0 0 0 1.2px ${PURPLE_HIGHLIGHT}, 0 0 2px ${PURPLE_HIGHLIGHT} !important; border-radius: 2px; background-color: rgba(255,255,255,0.8); }
+    
+    /* RESTORED OLD HANGDOG STYLE */
+    .topo-tick.tick_dog {
+      background-color: #c09b7a;
+      border: 1px solid rgba(0,0,0,0.25);
+      border-radius: 50%;
+      padding: 1px;
+      box-shadow: 0 0 2px rgba(0,0,0,0.25);
+      box-sizing: content-box;
+      transform: translate(-50%, 0) scale(0.75);
+      transform-origin: center top;
+    }
+
     .topo-grade { position: absolute; font-size: 8px; line-height: 9px; border-radius: 2px; text-align: center; transform: translate(-50%, 0); pointer-events: none; z-index: 5; white-space: nowrap; border: 1.1px solid #000 !important; font-weight: 800; padding: 0 1px; }
     .topo-listicon { position: absolute; width: 5px; height: 5px; border-radius: 50%; background: #419496; border: 1px solid #000; transform: translate(-50%, 0); pointer-events: none; z-index: 6; }
     .phototopo { margin-bottom: 20px !important; position: relative; }
@@ -212,6 +205,13 @@
     .phototopo svg.topooverlay.hide ~ .topo-grade { display: none !important; }
   `
   document.head.appendChild(style)
+
+  /* ===== CORE LOGIC ===== */
+  let styleMap = {},
+    tickMap = {},
+    gradeMap = {},
+    listMap = {},
+    hasRendered = false
 
   function collectData () {
     listMap = {}
@@ -231,10 +231,19 @@
         const tickIcon = tickContainer.querySelector('[class^="tick_"]')
         if (!nid || !tickIcon || tickIcon.classList.contains('tick_unticked'))
           return
+
         const isNonLead = !!tickIcon.querySelector(
           '.tag-tr, .tag-sd, .tags.second, .tags.toprope'
         )
         const computed = window.getComputedStyle(tickIcon)
+
+        // VALIDATION: Allow tick_dog even if background image is missing
+        if (
+          computed.backgroundImage === 'none' &&
+          !tickIcon.classList.contains('tick_dog')
+        )
+          return
+
         const typeMatch = tickIcon.className.match(/tick_[a-z]+/)
         if (typeMatch)
           tickMap[nid] = {
