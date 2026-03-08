@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         theCrag - Topo Ticks + Grades Overlay (Manual Bands)
 // @namespace    https://thecrag.com/
-// @version      2.7
+// @version      2.7.1
 // @description  Show grades, tick icons and list indicators directly on topo.
 // @match        https://www.thecrag.com/es/escalar/*
 // @match        https://www.thecrag.com/en/climbing/*
@@ -23,10 +23,11 @@
   const PURPLE_HIGHLIGHT = '#bb44ff',
     FALLBACK_BG = '#ccc'
 
+  /* Adjusted thresholds to ensure 4c (396) through 6a (579) are Yellow */
   const GRADE_BANDS = {
     beginner: { min: 0, max: 302, color: '#53b41c', textColor: '#000' },
-    intermediate: { min: 303, max: 380, color: '#ffe100', textColor: '#000' },
-    experienced: { min: 381, max: 902, color: '#e58329', textColor: '#000' },
+    intermediate: { min: 303, max: 602, color: '#ffe100', textColor: '#000' }, // Ends before 6a+ (603)
+    experienced: { min: 603, max: 902, color: '#e58329', textColor: '#000' }, // Starts at 6a+
     expert: { min: 903, max: 1202, color: '#c90909', textColor: '#fff' },
     elite: { min: 1203, max: 2000, color: '#b21882', textColor: '#fff' }
   }
@@ -203,7 +204,6 @@
     gradeMap = {}
     styleMap = {}
 
-    // Hybrid Scraper
     document.querySelectorAll('.route[data-nid]').forEach(route => {
       const nid = route.dataset.nid
       styleMap[nid] = route.querySelector('.tags.boulder') ? 'boulder' : 'sport'
@@ -248,7 +248,6 @@
       })
     }
 
-    // Route Detail Page Fallback (Parse JSON Topo Data)
     document.querySelectorAll('.phototopo[data-topodata]').forEach(topoDiv => {
       try {
         const data = JSON.parse(topoDiv.dataset.topodata)
