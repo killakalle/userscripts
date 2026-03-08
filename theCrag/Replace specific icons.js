@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name        theCrag - Replace ascent icons
 // @namespace   http://tampermonkey.net/
-// @version     0.2.3
+// @version     0.2.4
 // @description Replace ascent icons because they are hard to distinguish
 // @author      killakalle
 // @match       https://www.thecrag.com/
@@ -27,24 +27,24 @@
         width: 14px;
         height: 16px;
         border-radius: 2px;
-        
+
         font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
         font-size: 10px;
-        font-weight: 500; 
+        font-weight: 500;
         color: #fff !important;
         line-height: 1;
-        
+
         /* APPLYING YOUR REQUESTED POSITIONING */
         position: relative;
         left: 21px;
     }
-    
+
     /* T - Top Rope: Using a deep purple-blue that fits the 'tide' vibe */
-    .tag-tr { background-color: #cc44cc; } 
-    
+    .tag-tr { background-color: #cc44cc; }
+
     /* S - Second: A mid-tone blue from your theme's spectrum */
-    .tag-sd { background-color: #cc44cc; } 
-    
+    .tag-sd { background-color: #cc44cc; }
+
     /* L - Lead: Your theme's primary accent color (Teal) */
     .tag-ld { background-color: #409496; }
   `
@@ -54,18 +54,14 @@
     {
       selector: '.gear-style-top-rope',
       text: 'T',
-      className: 'modern-tag tag-tr tags toprope'
+      className: 'modern-tag tag-tr'
     },
     {
       selector: '.gear-style-second',
       text: 'S',
-      className: 'modern-tag tag-sd tags second'
+      className: 'modern-tag tag-sd'
     },
-    {
-      selector: '.gear-style-sport',
-      text: 'L',
-      className: 'modern-tag tag-ld tags sport'
-    }
+    { selector: '.gear-style-sport', text: 'L', className: 'modern-tag tag-ld' }
   ]
 
   function replaceElements () {
