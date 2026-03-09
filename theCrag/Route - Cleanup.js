@@ -1,7 +1,7 @@
 // ==UserScript==
-// @name         theCrag – Route detail page cleanup
+// @name         theCrag – Route - Cleanup
 // @namespace    https://github.com/killakalle/userscripts
-// @version      1.6.5
+// @version      1.6.6
 // @description  Hide unneeded sections on route detail pages
 // @author       killakalle
 // @match        https://www.thecrag.com/es/escalar/*/route/*

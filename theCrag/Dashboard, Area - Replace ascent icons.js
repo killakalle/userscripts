@@ -1,7 +1,7 @@
 // ==UserScript==
-// @name        theCrag - Replace ascent icons
+// @name        theCrag - Dashboard, Area - Replace ascent icons
 // @namespace   https://github.com/killakalle/userscripts
-// @version     0.2.7
+// @version     0.2.8
 // @description Replace ascent icons because they are hard to distinguish
 // @author      killakalle
 // @match       https://www.thecrag.com/

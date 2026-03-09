@@ -1,8 +1,8 @@
 // ==UserScript==
-// @name         theCrag – Remove route creation clutter
+// @name         theCrag – Add Routes - Minimal entry
 // @namespace    https://github.com/killakalle/userscripts
 // @author       killakalle
-// @version      1.2.1
+// @version      1.2.3
 // @description  Minimal view: Name + Registered Grade + Visual Grade Output, hides Context field and label, global toggle, autofocus first input only once
 // @match        https://www.thecrag.com/*
 // @icon         https://www.google.com/s2/favicons?domain=thecrag.com
