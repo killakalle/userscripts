@@ -2,9 +2,10 @@
 // @name         theCrag – Remove route creation clutter
 // @namespace    https://github.com/killakalle/userscripts
 // @author       killakalle
-// @version      1.2.0
+// @version      1.2.1
 // @description  Minimal view: Name + Registered Grade + Visual Grade Output, hides Context field and label, global toggle, autofocus first input only once
 // @match        https://www.thecrag.com/*
+// @icon         https://www.google.com/s2/favicons?domain=thecrag.com
 // @grant        none
 // @license      MIT
 // @downloadURL  https://update.greasyfork.org/scripts/569074/theCrag%20%E2%80%93%20Remove%20route%20creation%20clutter.user.js
