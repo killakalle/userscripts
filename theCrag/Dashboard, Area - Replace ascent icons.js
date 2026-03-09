@@ -12,8 +12,6 @@
 // @updateURL   https://update.greasyfork.org/scripts/568554/theCrag%20-%20Replace%20ascent%20icons.meta.js
 // @license     MIT
 // @grant       none
-// @downloadURL https://update.greasyfork.org/scripts/569076/theCrag%20-%20Ascent%20list%20-%20Cleanup.user.js
-// @updateURL   https://update.greasyfork.org/scripts/569076/theCrag%20-%20Ascent%20list%20-%20Cleanup.meta.js
 // ==/UserScript==
 
 ;(function () {
