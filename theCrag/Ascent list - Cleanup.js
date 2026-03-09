@@ -8,6 +8,8 @@
 // @icon         https://www.google.com/s2/favicons?domain=thecrag.com
 // @grant        none
 // @license      MIT
+// @downloadURL  https://update.greasyfork.org/scripts/569076/theCrag%20-%20Ascent%20list%20-%20Cleanup.user.js
+// @updateURL    https://update.greasyfork.org/scripts/569076/theCrag%20-%20Ascent%20list%20-%20Cleanup.meta.js
 // ==/UserScript==
 
 ;(function () {
