@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name        theCrag - Replace ascent icons
 // @namespace   http://tampermonkey.net/
-// @version     0.2.4
+// @version     0.2.5
 // @description Replace ascent icons because they are hard to distinguish
 // @author      killakalle
 // @match       https://www.thecrag.com/
