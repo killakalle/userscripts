@@ -2,7 +2,7 @@
 // @name         theCrag – Remove route creation clutter
 // @namespace    https://github.com/killakalle/userscripts
 // @author       killakalle
-// @version      1.1.1
+// @version      1.2.0
 // @description  Minimal view: Name + Registered Grade + Visual Grade Output, hides Context field and label, global toggle, autofocus first input only once
 // @match        https://www.thecrag.com/*
 // @grant        none
