@@ -1,14 +1,16 @@
 // ==UserScript==
 // @name         theCrag - Topo upload - Select all routes
 // @namespace    https://github.com/killakalle/userscripts
-// @version      0.2
+// @version      0.2.1
 // @description  Checkbox to conveniently de-/select all routes when adding topos
 // @author       killakalle
 // @match        https://www.thecrag.com/CIDS/cgi-bin/cids.cgi*AState=17515*
 // @icon         https://www.google.com/s2/favicons?domain=thecrag.com
 // @grant        none
-// @license      MIT
 // @run-at       document-idle
+// @license      MIT
+// @downloadURL  https://update.greasyfork.org/scripts/459805/theCrag%20-%20Topo%20upload%20-%20Select%20all%20routes.user.js
+// @updateURL    https://update.greasyfork.org/scripts/459805/theCrag%20-%20Topo%20upload%20-%20Select%20all%20routes.meta.js
 // ==/UserScript==
 
 ;(function () {
