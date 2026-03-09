@@ -1,7 +1,7 @@
 // ==UserScript==
-// @name         theCrag - Topo Ticks + Grades Overlay (Manual Bands)
+// @name         theCrag - Topo Ticks + Grades Overlay
 // @namespace    https://thecrag.com/
-// @version      2.7.1
+// @version      2.7.2
 // @description  Show grades, tick icons and list indicators directly on topo.
 // @match        https://www.thecrag.com/es/escalar/*
 // @match        https://www.thecrag.com/en/climbing/*
