@@ -2,13 +2,14 @@
 // @name          theCrag - Dashboard Cleanup
 // @author        killakalle
 // @namespace     https://github.com/killakalle/userscripts
-// @version       1.1
+// @version       1.1.1
 // @description   Removes unneccessary stuff from the dashboard, stream starts right away at the top. Base on original script by anderlnought
 // @match         https://www.thecrag.com/
 // @match         https://www.thecrag.com/dashboard
 // @match         https://www.thecrag.com/es/escalar/*
 // @match         https://www.thecrag.com/climbing/*
 // @exclude       https://www.thecrag.com/es/escalar/*route*
+// @license       MIT
 // @icon          https://www.google.com/s2/favicons?domain=thecrag.com
 // ==/UserScript==
 
