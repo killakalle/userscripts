@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         theCrag – Area/Crag page cleanup
 // @namespace    https://thecrag.com/
-// @version      1.2.3
+// @version      1.2.4
 // @description  Hide unneeded sections, internal tags, and auto-expand descriptions on crag/area overview pages
 // @match        https://www.thecrag.com/es/escalar/*
 // @match        https://www.thecrag.com/en/climbing/*
@@ -26,7 +26,8 @@
     removeSponsors: true,
     autoExpandDescription: true,
     hideInternalTags: true,
-    hideUntickedIcons: true
+    hideUntickedIcons: true,
+    addHtmlGuideLink: true // <--- New Toggle
   }
 
   /* ==================== HELPERS ==================== */
@@ -37,6 +38,25 @@
 
   function $all (sel, root) {
     return Array.prototype.slice.call((root || document).querySelectorAll(sel))
+  }
+
+  /* ==================== ADD HTML GUIDE LINK ==================== */
+
+  function addHtmlGuideLink () {
+    if (!CONFIG.addHtmlGuideLink) return
+
+    // Avoid adding multiple links if init runs twice
+    if ($('.custom-html-guide-link')) return
+
+    const elements = $all('.info.iblock')
+    elements.forEach(el => {
+      const a = document.createElement('a')
+      a.textContent = 'HTML Guide'
+      a.href = window.location.href.replace(/\/$/, '') + '/guide'
+      a.className = 'custom-html-guide-link'
+      a.style.marginLeft = '10px' // Slight spacing
+      el.appendChild(a)
+    })
   }
 
   /* ==================== HIDE INTERNAL ROUTE TAGS ==================== */
@@ -158,14 +178,8 @@
   /* ==================== HIDE UNTICKED ICONS ==================== */
 
   function hideUntickedIcons () {
-    // Select the specific unticked span
     const untickedIcons = $all('.tick .tick_unticked')
-
     untickedIcons.forEach(icon => {
-      // Option A: Hide only the icon (retains the clickable area)
-      // icon.style.display = 'none'
-
-      // Option B (Cleaner): Remove the entire link/placeholder
       icon.closest('.tick').innerHTML = ''
     })
   }
@@ -179,8 +193,10 @@
     removeShareSection()
     removeSponsors()
     hideUntickedIcons()
+    addHtmlGuideLink() // <--- Execution
   }
 
   init()
+  // Re-run after 1s for elements loaded via AJAX
   setTimeout(init, 1000)
 })()
