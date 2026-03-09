@@ -2,8 +2,8 @@
 // @name          theCrag - Dashboard Cleanup
 // @author        killakalle
 // @namespace     https://github.com/killakalle/userscripts
-// @version       1.1.2
-// @description   Removes unneccessary stuff from the dashboard, stream starts right away at the top. Base on original script by anderlnought
+// @version       1.2.0
+// @description   Removes unneccessary stuff from the dashboard, cleans up tick items, and highlights classic routes.
 // @match         https://www.thecrag.com/
 // @match         https://www.thecrag.com/dashboard
 // @match         https://www.thecrag.com/es/escalar/*
@@ -18,8 +18,17 @@
 ;(function () {
   'use strict'
 
-  // 1. Static UI elements
+  /* ==================== CONFIG ==================== */
+  const CONFIG = {
+    hideStaticElements: true,
+    cleanTickItems: true,
+    highlightClassicTags: true
+  }
+
+  /* ==================== 1. STATIC UI ELEMENTS ==================== */
   const hideStatic = () => {
+    if (!CONFIG.hideStaticElements) return
+
     const staticSelectors = [
       '.regions__prominent',
       '.btn-success',
@@ -38,23 +47,24 @@
     }
   }
 
-  // 2. Precise Tick Item Cleanup
+  /* ==================== 2. TICK ITEM CLEANUP ==================== */
   const cleanTickItems = () => {
-    // Find only the specific spans inside tick-items
+    if (!CONFIG.cleanTickItems) return
+
     const tickItems = document.querySelectorAll('.tick-item')
 
     tickItems.forEach(item => {
-      // Find Deportiva tags by checking the class string precisely
+      // Hide Sport/Deportiva tags
       item.querySelectorAll('span[class*="sport"]').forEach(tag => {
         tag.style.setProperty('display', 'none', 'important')
       })
 
-      // Find Bolts/Chapas by checking the class name specifically
+      // Hide Bolts/Chapas
       item.querySelectorAll('span.bolts').forEach(bolt => {
         bolt.style.setProperty('display', 'none', 'important')
       })
 
-      // Safety: Ensure the main paragraph is visible if something else hid it
+      // Ensure main paragraph visibility
       const mainP = item.querySelector('p')
       if (mainP && mainP.style.display === 'none') {
         mainP.style.display = 'block'
@@ -69,14 +79,68 @@
     })
   }
 
-  // Initial run
-  hideStatic()
-  cleanTickItems()
+  /* ==================== 3. TAG HIGHLIGHTING ==================== */
+  const highlightTags = node => {
+    if (!CONFIG.highlightClassicTags) return
 
-  // 3. Observer for scrolling
-  const observer = new MutationObserver(() => {
+    // If the node itself is a tick-item, or contains tick-items
+    const targets = node.classList?.contains('tick-item')
+      ? [node]
+      : node.querySelectorAll('.tick-item')
+
+    targets.forEach(item => {
+      const spans = item.querySelectorAll('.iblock span')
+      spans.forEach(span => {
+        const text = span.textContent.trim()
+
+        if (text === 'Clásico' || text === 'Megaclásica') {
+          if (span.dataset.clasicoProcessed) return
+          span.dataset.clasicoProcessed = 'true'
+
+          // Apply styling
+          Object.assign(span.style, {
+            padding: '1px 6px',
+            borderRadius: '8px',
+            fontWeight: '600',
+            fontSize: '0.85em',
+            display: 'inline-block',
+            lineHeight: '1.2',
+            color: '#155724',
+            backgroundColor: text === 'Clásico' ? '#d4edda' : '#c3e6cb'
+          })
+        }
+      })
+    })
+  }
+
+  /* ==================== RUN & OBSERVE ==================== */
+
+  const runAll = (root = document) => {
     hideStatic()
     cleanTickItems()
+    highlightTags(root)
+  }
+
+  // Initial run
+  runAll()
+
+  // Single observer for all dynamic changes
+  const observer = new MutationObserver(mutations => {
+    let shouldRunCleaners = false
+
+    mutations.forEach(mutation => {
+      mutation.addedNodes.forEach(node => {
+        if (node.nodeType === 1) {
+          shouldRunCleaners = true
+          highlightTags(node) // Target new nodes specifically for speed
+        }
+      })
+    })
+
+    if (shouldRunCleaners) {
+      hideStatic()
+      cleanTickItems()
+    }
   })
 
   observer.observe(document.body, {
