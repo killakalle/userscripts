@@ -1,8 +1,9 @@
 // ==UserScript==
 // @name         theCrag - Topo Ticks + Grades Overlay
-// @namespace    https://thecrag.com/
+// @namespace    https://github.com/killakalle/userscripts
 // @version      2.7.2
 // @description  Show grades, tick icons and list indicators directly on topo.
+// @author       killakalle
 // @match        https://www.thecrag.com/es/escalar/*
 // @match        https://www.thecrag.com/en/climbing/*
 // @icon         https://www.google.com/s2/favicons?domain=thecrag.com

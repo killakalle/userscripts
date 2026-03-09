@@ -3,6 +3,7 @@
 // @namespace    https://github.com/killakalle/userscripts
 // @version      1.2.5
 // @description  Hide unneeded sections, internal tags, and auto-expand descriptions on crag/area overview pages
+// @author       killakalle
 // @match        https://www.thecrag.com/es/escalar/*
 // @match        https://www.thecrag.com/en/climbing/*
 // @exclude      https://www.thecrag.com/es/escalar/*/route/*

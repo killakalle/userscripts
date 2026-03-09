@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         theCrag - Dashboard - Add areas to route tick items
-// @namespace    http://tampermonkey.net/
-// @version      0.7.1
+// @namespace    https://github.com/killakalle/userscripts
+// @version      0.7.2
 // @description  Adds a route's area to tick items in the stream
 // @author       killakalle
 // @match        https://www.thecrag.com/

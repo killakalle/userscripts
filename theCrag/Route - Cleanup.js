@@ -3,6 +3,7 @@
 // @namespace    https://github.com/killakalle/userscripts
 // @version      1.6.5
 // @description  Hide unneeded sections on route detail pages
+// @author       killakalle
 // @match        https://www.thecrag.com/es/escalar/*/route/*
 // @match        https://www.thecrag.com/en/climbing/*/route/*
 // @icon         https://www.google.com/s2/favicons?domain=thecrag.com
