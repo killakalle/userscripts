@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         theCrag – Area/Crag page cleanup
-// @namespace    https://thecrag.com/
-// @version      1.2.4
+// @namespace    https://github.com/killakalle/userscripts
+// @version      1.2.5
 // @description  Hide unneeded sections, internal tags, and auto-expand descriptions on crag/area overview pages
 // @match        https://www.thecrag.com/es/escalar/*
 // @match        https://www.thecrag.com/en/climbing/*
