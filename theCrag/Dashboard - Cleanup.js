@@ -11,6 +11,8 @@
 // @exclude       https://www.thecrag.com/es/escalar/*route*
 // @license       MIT
 // @icon          https://www.google.com/s2/favicons?domain=thecrag.com
+// @downloadURL   https://update.greasyfork.org/scripts/569070/theCrag%20-%20Dashboard%20Cleanup.user.js
+// @updateURL     https://update.greasyfork.org/scripts/569070/theCrag%20-%20Dashboard%20Cleanup.meta.js
 // ==/UserScript==
 
 ;(function () {
