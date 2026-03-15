@@ -1,7 +1,7 @@
 /* ==UserStyle==
 @namespace    USO Archive
 @author       killakalle
-@version      0.6
+@version      0.7
 @license      NONE
 @preprocessor uso
 @name         theCrag - Cerulean Tide (modified)
@@ -1223,5 +1223,43 @@ A deep blue theme for theCrag. As a dark theme, images and photos are slightly d
     textarea.markdown {
         background: var(--bg5) !important;
         color: var(--text2) !important;
+    }
+
+
+    /* --- Fix for New theCrag Sun/Shade Icons & Charts --- */
+
+    /* 1. Invert the BW SVG icons so black lines become light gray/white */
+    .svg-icon-tag-always-shady-bw,
+    [class*="svg-icon-tag-"][class*="-bw"] {
+        filter: invert(0.8) brightness(1.2) !important;
+    }
+
+    /* 2. Style the Sun/Shade Chart container */
+    .sunShadeTarget {
+        background-color: var(--bg10);
+        /* Darkest blue background for the chart */
+        border-radius: 4px;
+        padding: 2px;
+    }
+
+    /* 3. Ensure the Chart Rectangles are visible */
+    /* theCrag uses specific classes for the SVG rects */
+    .targetSvg rect.shady {
+        fill: var(--color-shady-target) !important;
+        opacity: 0.8;
+    }
+
+    .targetSvg rect.sunny {
+        fill: var(--color-sunny) !important;
+    }
+
+    .targetSvg rect.transition {
+        fill: var(--color-transition-target) !important;
+    }
+
+    /* 4. Fix the time labels (07, 19) below the chart */
+    .day_times span {
+        color: var(--text2) !important;
+        font-size: 0.9em;
     }
 }
