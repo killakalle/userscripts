@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         theCrag – Area- Cleanup
 // @namespace    https://github.com/killakalle/userscripts
-// @version      1.2.6
+// @version      1.2.7
 // @description  Hide unneeded sections, internal tags, and auto-expand descriptions on crag/area overview pages
 // @author       killakalle
 // @match        https://www.thecrag.com/es/escalar/*
@@ -28,6 +28,7 @@
     autoExpandDescription: true,
     hideInternalTags: true,
     hideUntickedIcons: true,
+    hideSportTag: true,
     addHtmlGuideLink: true // <--- New Toggle
   }
 
@@ -78,6 +79,21 @@
     $all('a.tags').forEach(tag => {
       const text = tag.textContent.trim()
       if (TAGS_TO_HIDE.includes(text)) {
+        tag.remove()
+      }
+    })
+  }
+
+  /* ==================== HIDE SPECIFIC SPORT TAGS ==================== */
+
+  function hideSportTags () {
+    // Selects spans that have both 'tags' and 'sport' classes
+    const sportTags = $all('span.tags.sport')
+
+    sportTags.forEach(tag => {
+      const text = tag.textContent.trim()
+      // Specifically targets "Deportiva" or "Sport" to avoid over-matching
+      if (text === 'Deportiva' || text === 'Sport') {
         tag.remove()
       }
     })
