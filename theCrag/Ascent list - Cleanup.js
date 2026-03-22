@@ -12,66 +12,172 @@
 // @updateURL    https://update.greasyfork.org/scripts/569076/theCrag%20-%20Ascent%20list%20-%20Cleanup.meta.js
 // ==/UserScript==
 
+/*
+  TODO SECTION:
+  - Add ascent date per line (move from group header to individual row)
+  - Remove theCrag's automatic key word highlighting such as "crux", "good", etc. which can be misleading and is not user-configurable
+*/
+
 ;(function () {
   'use strict'
 
-  // Hide the search facet and the first occurrence of pagination
-  var facets = document.getElementById('facets')
-  if (facets) {
-    facets.style.display = 'none'
-  }
+  const currentUrl = window.location.href
+  const isRouteView = currentUrl.includes('/route/')
 
-  var firstPagination = document.querySelector('.page-chooser.center')
-  if (firstPagination) {
-    firstPagination.style.display = 'none'
-  }
+  // 1. EXTRA ROBUST CLUTTER HIDING
+  const directSelectors = [
+    'form#facets',
+    '.page-chooser',
+    '.filter-group',
+    '.regions__table > .regions__inner > div:first-child'
+  ]
+  directSelectors.forEach(s => {
+    const el = document.querySelectorAll(s)
+    el.forEach(e => (e.style.display = 'none'))
+  })
 
-  // Remove Type 1 (date rows) and Type 2 (area title rows) from the search results table
-  var table = document.querySelector(
+  const allDivs = document.querySelectorAll('.regions__inner div')
+  allDivs.forEach(div => {
+    if (div.textContent.includes('Buscando en:')) {
+      div.style.display = 'none'
+    }
+  })
+
+  // 2. Process the table
+  const table = document.querySelector(
     'table.routetable.facet-results[data-actiontype="ascent"]'
   )
+
   if (table) {
-    var rows = table.getElementsByTagName('tr')
-    for (var i = rows.length - 1; i >= 0; i--) {
-      var row = rows[i]
-      if (row.querySelector('.group')) {
-        row.parentNode.removeChild(row)
+    const theadRow = table.querySelector('thead tr')
+
+    // A. Add "Comentarios" Header
+    if (theadRow && !document.getElementById('added-comment-header')) {
+      const commentHeader = document.createElement('th')
+      commentHeader.id = 'added-comment-header'
+      commentHeader.textContent = 'Comentarios'
+      theadRow.insertBefore(commentHeader, theadRow.cells[4])
+    }
+
+    // B. Force Layout and Widths
+    if (theadRow) {
+      table.style.tableLayout = 'fixed'
+      table.style.width = '100%'
+
+      if (theadRow.cells[3]) theadRow.cells[3].style.display = 'none'
+
+      theadRow.cells[0].style.width = '45px'
+      theadRow.cells[1].style.width = '55px'
+      theadRow.cells[5].style.width = '125px'
+      theadRow.cells[6].style.width = '120px'
+
+      const viaHeader = theadRow.cells[2]
+      const commentHeader = document.getElementById('added-comment-header')
+
+      if (isRouteView) {
+        if (viaHeader) viaHeader.style.display = 'none'
+        commentHeader.style.width = 'auto'
+      } else {
+        if (viaHeader) viaHeader.style.width = '22%'
+        commentHeader.style.width = '44%'
       }
     }
+
+    // C. Process body rows
+    const bodyRows = Array.from(table.querySelectorAll('tbody tr'))
+    bodyRows.forEach(row => {
+      // Remove Group/Date headers (Keeping this for now as per TODO)
+      if (row.querySelector('.group')) {
+        row.remove()
+        return
+      }
+
+      if (row.cells[3]) row.cells[3].style.display = 'none'
+      if (isRouteView && row.cells[2]) row.cells[2].style.display = 'none'
+
+      // Ensure vertical alignment for all existing cells to fix misalignment
+      Array.from(row.cells).forEach(cell => {
+        cell.style.verticalAlign = 'top'
+        cell.style.paddingTop = '8px'
+      })
+
+      // Create comment cell
+      let commentCell = row.querySelector('.comment-cell')
+      if (!row.classList.contains('comment-row') && !commentCell) {
+        commentCell = row.insertCell(4)
+        commentCell.className = 'comment-cell'
+        Object.assign(commentCell.style, {
+          fontSize: '12px',
+          padding: '8px',
+          verticalAlign: 'top',
+          lineHeight: '1.4',
+          overflow: 'hidden',
+          wordWrap: 'break-word'
+        })
+      }
+
+      // Move comments from .comment-row
+      if (row.classList.contains('comment-row')) {
+        const prevRow = row.previousElementSibling
+        const targetCell = prevRow
+          ? prevRow.querySelector('.comment-cell')
+          : null
+        if (targetCell) {
+          const commentBlocks = row.querySelectorAll('.event-item')
+          commentBlocks.forEach(block => {
+            const markdownDiv = block.querySelector('.markdown')
+            if (markdownDiv) {
+              const isPrivate = markdownDiv
+                .getAttribute('style')
+                ?.includes('#f4f4f4')
+              const wrapper = document.createElement('div')
+              wrapper.style.marginBottom = '6px'
+              if (isPrivate) {
+                Object.assign(wrapper.style, {
+                  background: 'rgba(255, 255, 255, 0.07)',
+                  border: '1px dashed #666',
+                  padding: '5px',
+                  borderRadius: '4px',
+                  fontSize: '11px'
+                })
+                wrapper.innerHTML = `<strong style="font-size:9px; color:#999; display:block;">PRIVATE</strong>${markdownDiv.innerHTML}`
+              } else {
+                wrapper.innerHTML = markdownDiv.innerHTML
+              }
+              targetCell.appendChild(wrapper)
+            }
+          })
+        }
+        row.remove()
+      }
+    })
   }
 
-  // Add a button to toggle between all ascents and ascents with beta information
-  var titleElement = document.querySelector('.headline .heading__t')
-  if (titleElement) {
-    var toggleButton = document.createElement('button')
-    toggleButton.textContent = 'Show Beta Ascents'
-    toggleButton.style.marginLeft = '20px'
-    toggleButton.style.padding = '3px 8px'
-    toggleButton.style.cursor = 'pointer'
-    toggleButton.style.fontSize = '14px'
-    toggleButton.style.lineHeight = 'normal'
-    toggleButton.style.border = '1px solid #ccc'
-    toggleButton.style.borderRadius = '3px'
-    toggleButton.style.backgroundColor = '#f0f0f0'
-
-    // Determine the current state and set the initial button text
-    var currentUrl = window.location.href
-    var showingBeta = currentUrl.includes('/has/beta/')
+  // 3. Beta Toggle Button
+  const titleElement = document.querySelector('.headline .heading__t')
+  if (titleElement && !document.getElementById('beta-toggle-btn')) {
+    const toggleButton = document.createElement('button')
+    toggleButton.id = 'beta-toggle-btn'
+    const showingBeta = currentUrl.includes('/has/beta/')
     toggleButton.textContent = showingBeta
       ? 'Show All Ascents'
       : 'Show Beta Ascents'
-
+    Object.assign(toggleButton.style, {
+      marginLeft: '20px',
+      padding: '3px 8px',
+      cursor: 'pointer',
+      fontSize: '14px',
+      border: '1px solid #ccc',
+      borderRadius: '3px',
+      backgroundColor: '#f0f0f0',
+      color: '#333'
+    })
     toggleButton.onclick = function () {
-      var baseUrl = currentUrl.split('/ascents')[0] + '/ascents'
-      if (showingBeta) {
-        // Show all ascents
-        window.location.href = baseUrl
-      } else {
-        // Show only ascents with beta
-        window.location.href = baseUrl + '/has/beta/?sortby=when-climbed,desc'
-      }
+      const baseUrl = currentUrl.split('/ascents')[0] + '/ascents'
+      window.location.href = showingBeta
+        ? baseUrl
+        : baseUrl + '/has/beta/?sortby=when-climbed,desc'
     }
-
     titleElement.appendChild(toggleButton)
   }
 })()
