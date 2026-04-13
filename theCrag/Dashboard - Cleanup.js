@@ -2,7 +2,7 @@
 // @name          theCrag - Dashboard - Cleanup
 // @author        killakalle
 // @namespace     https://github.com/killakalle/userscripts
-// @version       1.2.1
+// @version       1.2.2
 // @description   Removes unneccessary stuff from the dashboard, cleans up tick items, and highlights classic routes.
 // @match         https://www.thecrag.com/
 // @match         https://www.thecrag.com/dashboard
