@@ -31,7 +31,7 @@
 
     const staticSelectors = [
       '.regions__prominent',
-      '.btn-success',
+      //'.btn-success',             // side effect: removes Save button from topo editing pages
       '.sponsor-media-container',
       "a[href='#sponsors']"
     ]
