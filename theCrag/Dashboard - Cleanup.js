@@ -2,8 +2,8 @@
 // @name          theCrag - Dashboard - Cleanup
 // @author        killakalle
 // @namespace     https://github.com/killakalle/userscripts
-// @version       1.2.2
-// @description   Removes unneccessary stuff from the dashboard, cleans up tick items, and highlights classic routes.
+// @version       1.2.3
+// @description   Removes unnecessary stuff from the dashboard, hides "favorite" events, cleans up tick items, and highlights classic routes.
 // @match         https://www.thecrag.com/
 // @match         https://www.thecrag.com/dashboard
 // @match         https://www.thecrag.com/es/escalar/*
@@ -21,29 +21,42 @@
   /* ==================== CONFIG ==================== */
   const CONFIG = {
     hideStaticElements: true,
+    hideFavoriteEvents: true,
     cleanTickItems: true,
     highlightClassicTags: true
   }
 
-  /* ==================== 1. STATIC UI ELEMENTS ==================== */
-  const hideStatic = () => {
-    if (!CONFIG.hideStaticElements) return
+  /* ==================== 1. STATIC UI & EVENTS ==================== */
+  const hideElements = () => {
+    if (CONFIG.hideStaticElements) {
+      const staticSelectors = [
+        '.regions__prominent',
+        '.sponsor-media-container',
+        "a[href='#sponsors']"
+      ]
+      staticSelectors.forEach(sel => {
+        document
+          .querySelectorAll(sel)
+          .forEach(el => (el.style.display = 'none'))
+      })
 
-    const staticSelectors = [
-      '.regions__prominent',
-      //'.btn-success',             // side effect: removes Save button from topo editing pages
-      '.sponsor-media-container',
-      "a[href='#sponsors']"
-    ]
-    staticSelectors.forEach(sel => {
-      document.querySelectorAll(sel).forEach(el => (el.style.display = 'none'))
-    })
+      // Target the specific grade-convert header text only
+      const gc = document.querySelector('.grade-convert')
+      if (gc) {
+        if (gc.querySelector('h3'))
+          gc.querySelector('h3').style.display = 'none'
+        if (gc.querySelector('p')) gc.querySelector('p').style.display = 'none'
+      }
+    }
 
-    // Target the specific grade-convert header text only
-    const gc = document.querySelector('.grade-convert')
-    if (gc) {
-      if (gc.querySelector('h3')) gc.querySelector('h3').style.display = 'none'
-      if (gc.querySelector('p')) gc.querySelector('p').style.display = 'none'
+    // New logic to hide "Added to Favorites" events from the feed
+    if (CONFIG.hideFavoriteEvents) {
+      document.querySelectorAll('.event').forEach(event => {
+        // Check if the event contains the heart icon container
+        if (event.querySelector('.event-favorite')) {
+          event.style.display = 'none'
+        }
+      })
     }
   }
 
@@ -54,24 +67,20 @@
     const tickItems = document.querySelectorAll('.tick-item')
 
     tickItems.forEach(item => {
-      // Hide Sport/Deportiva tags
       item.querySelectorAll('span[class*="sport"]').forEach(tag => {
         tag.style.setProperty('display', 'none', 'important')
       })
 
-      // Hide Bolts/Chapas
       item.querySelectorAll('span.bolts').forEach(bolt => {
         bolt.style.setProperty('display', 'none', 'important')
       })
 
-      // Ensure main paragraph visibility
       const mainP = item.querySelector('p')
       if (mainP && mainP.style.display === 'none') {
         mainP.style.display = 'block'
       }
     })
 
-    // Ensure the event tagline isn't accidentally hidden
     document.querySelectorAll('.event-tagline').forEach(tagline => {
       if (tagline.style.display === 'none') {
         tagline.style.display = 'block'
@@ -83,7 +92,6 @@
   const highlightTags = node => {
     if (!CONFIG.highlightClassicTags) return
 
-    // If the node itself is a tick-item, or contains tick-items
     const targets = node.classList?.contains('tick-item')
       ? [node]
       : node.querySelectorAll('.tick-item')
@@ -97,7 +105,6 @@
           if (span.dataset.clasicoProcessed) return
           span.dataset.clasicoProcessed = 'true'
 
-          // Apply styling
           Object.assign(span.style, {
             padding: '1px 6px',
             borderRadius: '8px',
@@ -116,15 +123,13 @@
   /* ==================== RUN & OBSERVE ==================== */
 
   const runAll = (root = document) => {
-    hideStatic()
+    hideElements()
     cleanTickItems()
     highlightTags(root)
   }
 
-  // Initial run
   runAll()
 
-  // Single observer for all dynamic changes
   const observer = new MutationObserver(mutations => {
     let shouldRunCleaners = false
 
@@ -132,13 +137,13 @@
       mutation.addedNodes.forEach(node => {
         if (node.nodeType === 1) {
           shouldRunCleaners = true
-          highlightTags(node) // Target new nodes specifically for speed
+          highlightTags(node)
         }
       })
     })
 
     if (shouldRunCleaners) {
-      hideStatic()
+      hideElements()
       cleanTickItems()
     }
   })
