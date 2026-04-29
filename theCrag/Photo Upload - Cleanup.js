@@ -1,8 +1,8 @@
 // ==UserScript==
-// @name          theCrag - Mobile Photo Upload - Extreme Mobile
+// @name          theCrag - Mobile Photo Upload - Cleanup
 // @author        killakalle
 // @namespace     https://github.com/killakalle/userscripts
-// @version       0.0.5
+// @version       0.0.6
 // @description   Transforms theCrag upload into a full-screen, big-button mobile interface.
 // @match         https://www.thecrag.com/CIDS/cgi-bin/cids.cgi*
 // @match         https://www.thecrag.com/es/escalar/*/photos/upload*
