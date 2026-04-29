@@ -2,11 +2,13 @@
 // @name          theCrag - Mobile Photo Upload - Cleanup
 // @author        killakalle
 // @namespace     https://github.com/killakalle/userscripts
-// @version       0.0.6
+// @version       0.0.7
 // @description   Transforms theCrag upload into a full-screen, big-button mobile interface.
 // @match         https://www.thecrag.com/CIDS/cgi-bin/cids.cgi*
 // @match         https://www.thecrag.com/es/escalar/*/photos/upload*
 // @match         https://www.thecrag.com/climbing/*/photos/upload*
+// @downloadURL   https://update.greasyfork.org/scripts/575963/theCrag%20-%20Mobile%20Photo%20Upload%20-%20Cleanup.user.js
+// @updateURL     https://update.greasyfork.org/scripts/575963/theCrag%20-%20Mobile%20Photo%20Upload%20-%20Cleanup.meta.js
 // @grant         none
 // ==/UserScript==
 
