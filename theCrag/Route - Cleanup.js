@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         theCrag – Route - Cleanup
 // @namespace    https://github.com/killakalle/userscripts
-// @version      1.6.7
+// @version      1.6.8
 // @description  Hide unneeded sections on route detail pages
 // @author       killakalle
 // @match        https://www.thecrag.com/es/escalar/*/route/*
@@ -486,27 +486,41 @@
     const style = document.createElement('style')
     style.id = 'tc-mobile-nav-styles'
     style.textContent = `
-      /* Desktop defaults */
+      /* Desktop: keep them inline with the list */
       .tc-route-nav-li { display: inline-flex; align-items: center; }
       
-      /* Mobile specific adjustments */
+      /* Mobile: Overlay them on the edges */
       @media (max-width: 767px) {
-        .headline__guts ul.stats {
-          display: flex !important;
-          flex-wrap: wrap;
-          width: 100%;
-          position: relative;
+        .headline__guts {
+          position: relative; /* Create a boundary for the arrows */
         }
+
         .tc-route-nav-li {
-          width: 100%;
+          position: absolute;
+          left: 0;
+          right: 0;
+          top: 50%; /* Center vertically relative to the header guts */
+          transform: translateY(-50%);
           display: flex !important;
           justify-content: space-between;
-          margin-bottom: 10px;
+          width: 100%;
+          pointer-events: none; /* Let clicks pass through the invisible middle bar */
+          z-index: 10;
         }
+
         .tc-nav-prev, .tc-nav-next {
-          font-size: 28px !important; /* Large, easy-to-tap size */
-          background: rgba(0,0,0,0.05); /* Subtle background to show hit area */
+          pointer-events: auto; /* Re-enable clicks for the arrows themselves */
+          font-size: 32px !important;
+          padding: 15px 10px !important;
+          background: rgba(255, 255, 255, 0.1); /* Subtle visibility */
           border-radius: 4px;
+          line-height: 1;
+        }
+
+        /* Adjust the actual list so it doesn't overlap text if possible */
+        .headline__guts ul.stats {
+          padding: 0 40px !important; /* Give the text some breathing room from the arrows */
+          text-align: center;
         }
       }
     `
