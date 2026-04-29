@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         theCrag – Route - Cleanup
 // @namespace    https://github.com/killakalle/userscripts
-// @version      1.6.6
+// @version      1.6.7
 // @description  Hide unneeded sections on route detail pages
 // @author       killakalle
 // @match        https://www.thecrag.com/es/escalar/*/route/*
@@ -80,7 +80,7 @@
   function addRouteNavigationArrows () {
     if (!CONFIG.addRouteNavigationArrows) return
 
-    // prevent duplicates (init runs twice)
+    // prevent duplicates
     if (document.querySelector('.tc-route-nav-li')) return
 
     const prevLink = document.querySelector("a[rel='prev']")
@@ -92,21 +92,25 @@
 
     const li = document.createElement('li')
     li.className = 'tc-route-nav-li'
-    li.style.marginRight = '12px' // spacing before Contexto
 
-    function createArrow (href, symbol, title) {
+    function createArrow (href, symbol, title, className) {
       const a = document.createElement('a')
       a.href = href
       a.textContent = symbol
       a.title = title
+      a.className = className // Added class for CSS targeting
 
-      a.style.fontWeight = 'bold'
-      a.style.fontSize = '16px'
-      a.style.textDecoration = 'none'
-      a.style.marginRight = '6px'
-      a.style.opacity = '0.75'
-      a.style.color = 'inherit'
-      a.style.transition = 'opacity 0.15s ease'
+      // Inline styles for base desktop look
+      Object.assign(a.style, {
+        fontWeight: 'bold',
+        fontSize: '20px', // Increased base size
+        textDecoration: 'none',
+        padding: '10px', // Added padding to increase touch target area
+        opacity: '0.75',
+        color: 'inherit',
+        transition: 'opacity 0.15s ease',
+        display: 'inline-block'
+      })
 
       a.addEventListener('mouseenter', () => {
         a.style.opacity = '1'
@@ -119,14 +123,17 @@
     }
 
     if (prevLink) {
-      li.appendChild(createArrow(prevLink.href, '←', 'Previous route'))
+      li.appendChild(
+        createArrow(prevLink.href, '←', 'Previous route', 'tc-nav-prev')
+      )
     }
 
     if (nextLink) {
-      li.appendChild(createArrow(nextLink.href, '→', 'Next route'))
+      li.appendChild(
+        createArrow(nextLink.href, '→', 'Next route', 'tc-nav-next')
+      )
     }
 
-    // Insert as first stat item (inline with others)
     statsUl.insertBefore(li, statsUl.firstElementChild)
   }
 
@@ -472,9 +479,44 @@
     heading.remove()
   }
 
+  /* ==================== STYLES ==================== */
+
+  function injectMobileStyles () {
+    if (document.getElementById('tc-mobile-nav-styles')) return
+    const style = document.createElement('style')
+    style.id = 'tc-mobile-nav-styles'
+    style.textContent = `
+      /* Desktop defaults */
+      .tc-route-nav-li { display: inline-flex; align-items: center; }
+      
+      /* Mobile specific adjustments */
+      @media (max-width: 767px) {
+        .headline__guts ul.stats {
+          display: flex !important;
+          flex-wrap: wrap;
+          width: 100%;
+          position: relative;
+        }
+        .tc-route-nav-li {
+          width: 100%;
+          display: flex !important;
+          justify-content: space-between;
+          margin-bottom: 10px;
+        }
+        .tc-nav-prev, .tc-nav-next {
+          font-size: 28px !important; /* Large, easy-to-tap size */
+          background: rgba(0,0,0,0.05); /* Subtle background to show hit area */
+          border-radius: 4px;
+        }
+      }
+    `
+    document.head.appendChild(style)
+  }
+
   /* ==================== RUN ==================== */
 
   function init () {
+    injectMobileStyles() // Now this works because the function is defined
     removeContextoDeGrado()
     removeAggregateRatingDiv()
     addRouteNavigationArrows()
@@ -492,5 +534,5 @@
   }
 
   init()
-  setTimeout(init, 1000) // in case parts load slightly later
+  setTimeout(init, 1000)
 })()
