@@ -1,107 +1,127 @@
 // ==UserScript==
-// @name          theCrag - Mobile Photo Upload - Cleanup
+// @name          theCrag - Mobile Photo Upload - Extreme Mobile
 // @author        killakalle
 // @namespace     https://github.com/killakalle/userscripts
-// @version       0.0.4
-// @description   Forces giant buttons and a "Clean Mode" for mobile photo uploads on theCrag.
+// @version       0.0.5
+// @description   Transforms theCrag upload into a full-screen, big-button mobile interface.
 // @match         https://www.thecrag.com/CIDS/cgi-bin/cids.cgi*
 // @match         https://www.thecrag.com/es/escalar/*/photos/upload*
 // @match         https://www.thecrag.com/climbing/*/photos/upload*
-// @icon          https://www.google.com/s2/favicons?domain=thecrag.com
 // @grant         none
-// @license       MIT
 // ==/UserScript==
 
 ;(function () {
   'use strict'
 
   const cleanupUI = () => {
-    // 1. Auto-check copyright
+    // 1. Auto-check and hide copyright
     const check = document.querySelector('#mustowncopyrightcheck')
     if (check) {
       check.checked = true
-      // Hide the parent div of the checkbox to clean up the UI
-      check.parentElement.style.setProperty('display', 'none', 'important')
+      check.parentElement.style.display = 'none'
     }
 
-    // 2. Hide specific distracting elements
+    // 2. Remove all desktop scaffolding
     const selectorsToHide = [
-      '#footer', // Site footer
-      '.regions__footer', // Site footer area
-      '.plupload_header', // "Select files" box
-      '.plupload_droptext', // "Drag files here"
-      '.breadcrumb', // Navigation path
-      '.bust', // The entire top header/logo/nav area
-      '.regions__headline', // The "Select photos to upload" H1 area
-      '#uploadform > div:nth-of-type(1) p' // Target the specific disclaimer text only
+      '#footer',
+      '.regions__footer',
+      '.breadcrumb',
+      '.bust',
+      '.regions__headline',
+      '.plupload_header',
+      '.plupload_droptext',
+      '#uploadform > div p',
+      '.plupload_file_size',
+      '.plupload_file_status'
     ]
 
     selectorsToHide.forEach(sel => {
-      document.querySelectorAll(sel).forEach(el => {
-        el.style.setProperty('display', 'none', 'important')
-      })
+      document
+        .querySelectorAll(sel)
+        .forEach(el => el.style.setProperty('display', 'none', 'important'))
     })
   }
 
-  const injectExtremeStyles = () => {
-    if (document.getElementById('tc-extreme-upload-styles')) return
+  const injectMobileStyles = () => {
+    if (document.getElementById('tc-mobile-ux-styles')) return
 
     const style = document.createElement('style')
-    style.id = 'tc-extreme-upload-styles'
+    style.id = 'tc-mobile-ux-styles'
     style.textContent = `
-      @media (max-width: 767px) {
-        body, html, .regions__wide, .regions__inner, #wrapper { 
-          background: #121212 !important; 
-          color: white !important;
-        }
+      /* Reset containers to be full screen width */
+      html, body, #wrapper, .regions__content, .regions__wide, .regions__inner, #uploadform {
+        width: 100% !important;
+        margin: 0 !important;
+        padding: 0 !important;
+        background: #000 !important; /* Deep black for focus */
+        overflow-x: hidden;
+      }
 
-        #uploader {
-          padding-top: 10px !important;
-        }
+      /* Giant "ADD FILES" Button */
+      #uploader_browse, .plupload_button.plupload_add {
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        width: 94vw !important;
+        height: 120px !important;
+        margin: 20px auto !important;
+        background: #28a745 !important;
+        color: #fff !important;
+        font-size: 30px !important;
+        font-weight: bold !important;
+        border-radius: 15px !important;
+        box-shadow: 0 4px 15px rgba(0,255,0,0.2) !important;
+        text-transform: uppercase;
+      }
 
-        /* Large Green Add Button */
-        #uploader_browse, .plupload_button.plupload_add {
-          display: flex !important;
-          align-items: center !important;
-          justify-content: center !important;
-          width: 100% !important;
-          height: 120px !important; 
-          font-size: 32px !important;
-          font-weight: 900 !important;
-          background: #28a745 !important;
-          color: white !important;
-          border-radius: 20px !important;
-          margin: 10px 0 20px 0 !important;
-          border: none !important;
-          box-shadow: 0 8px 20px rgba(0,0,0,0.5) !important;
-        }
+      /* Giant "SUBMIT / UPLOAD" Button */
+      .standardButton {
+        margin: 40px 0 !important;
+        padding: 0 3vw !important;
+      }
+      
+      .standardButton input[type="submit"] {
+        width: 100% !important;
+        height: 100px !important;
+        background: #007bff !important;
+        color: white !important;
+        font-size: 28px !important;
+        font-weight: 800 !important;
+        border-radius: 15px !important;
+        border: none !important;
+        box-shadow: 0 4px 15px rgba(0,123,255,0.3) !important;
+      }
 
-        /* Large Blue Submit Button */
-        .standardButton input[type="submit"] {
-          display: block !important;
-          width: 100% !important;
-          height: 120px !important;
-          font-size: 32px !important;
-          font-weight: 900 !important;
-          background: #007bff !important;
-          color: white !important;
-          border-radius: 20px !important;
-          border: none !important;
-          margin-top: 20px !important;
-          box-shadow: 0 8px 20px rgba(0,0,0,0.5) !important;
-        }
+      /* Make the file list take up more space and be readable */
+      .plupload_wrapper {
+        width: 100% !important;
+        min-height: 200px !important;
+      }
+      
+      .plupload_filelist {
+        background: #1a1a1a !important;
+        border: 1px solid #333 !important;
+        color: #fff !important;
+        margin: 0 3vw !important;
+        width: 94vw !important;
+      }
 
-        /* Make file list visible against dark background */
-        .plupload_filelist {
-          background: #1e1e1e !important;
-          color: #eee !important;
-        }
+      .plupload_file_name {
+        font-size: 18px !important;
+        padding: 15px !important;
+        color: #ccc !important;
+      }
 
-        /* Ensure the click shim covers the giant button */
-        .moxie-shim {
-          width: 100% !important;
-          height: 120px !important;
-        }
+      /* Fix the invisible Plupload overlay that catches clicks */
+      .moxie-shim, .moxie-shim input {
+        width: 100% !important;
+        height: 120px !important;
+      }
+
+      /* Visual feedback for taps */
+      #uploader_browse:active, input[type="submit"]:active {
+        transform: scale(0.98);
+        filter: brightness(1.1);
       }
     `
     document.head.appendChild(style)
@@ -109,11 +129,11 @@
 
   const init = () => {
     cleanupUI()
-    injectExtremeStyles()
+    injectMobileStyles()
   }
 
-  // Initial run
+  // Plupload dynamically re-injects the "Add Files" button logic,
+  // so we stay persistent with a short interval.
   init()
-  // Re-run to handle Plupload's dynamic DOM injections
   setInterval(init, 500)
 })()
