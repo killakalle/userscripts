@@ -1,10 +1,11 @@
 // ==UserScript==
 // @name         theCrag - Topo upload - Select all routes
 // @namespace    https://github.com/killakalle/userscripts
-// @version      0.2.1
+// @version      0.2.2
 // @description  Checkbox to conveniently de-/select all routes when adding topos
 // @author       killakalle
 // @match        https://www.thecrag.com/CIDS/cgi-bin/cids.cgi*AState=17515*
+// @match        https://www.thecrag.com/CIDS/cgi-bin/cids.cgi*State=17068*
 // @icon         https://www.google.com/s2/favicons?domain=thecrag.com
 // @grant        none
 // @run-at       document-idle
