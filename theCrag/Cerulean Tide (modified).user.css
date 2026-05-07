@@ -1,13 +1,14 @@
 /* ==UserStyle==
 @namespace    USO Archive
 @author       killakalle
-@version      0.7
+@version      0.7.1
 @license      NONE
 @preprocessor uso
 @name         theCrag - Cerulean Tide (modified)
 @description  Based on the original style by etcho https://userstyles.world/api/style/21169.user.css
 Made slight modifications where necessary.
 A deep blue theme for theCrag. As a dark theme, images and photos are slightly darker to be more pleasing to the eyes.
+
 ==/UserStyle== */
 @-moz-document domain(thecrag.com) {
     :root {
@@ -1261,5 +1262,33 @@ A deep blue theme for theCrag. As a dark theme, images and photos are slightly d
     .day_times span {
         color: var(--text2) !important;
         font-size: 0.9em;
+    }
+
+    /* --- Fix for Tick Selector Visibility --- */
+
+    /* Highlight the text and background of the selected item */
+    #log-ascent-modal .tick-selection.tick-selected {
+        background-color: var(--bg3);
+        /* Dark but distinct blue */
+        border-radius: 4px;
+    }
+
+    /* Change the selection arrow color to a bright brand color */
+    #log-ascent-modal .tick-selected-arrow {
+        color: var(--text4) !important;
+        /* Teal color instead of dark blue */
+        font-weight: bold;
+    }
+
+    /* Add a glow/border to the icon of the selected item */
+    #log-ascent-modal .tick-selection.tick-selected .tick-icon-container {
+        border-color: var(--text4) !important;
+        box-shadow: 0 0 5px var(--text4);
+    }
+
+    /* Ensure text stands out */
+    .tick-selection.tick-selected .tick-text {
+        color: var(--text1) !important;
+        font-weight: bold;
     }
 }
