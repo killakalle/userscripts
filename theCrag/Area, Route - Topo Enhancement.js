@@ -1,11 +1,13 @@
 // ==UserScript==
 // @name         theCrag - Topo Enhancement
 // @namespace    https://github.com/killakalle/userscripts
-// @version      2.7.3
+// @version      2.7.4
 // @description  Show grades, tick icons and list indicators directly on topo.
 // @author       killakalle
 // @match        https://www.thecrag.com/es/escalar/*
 // @match        https://www.thecrag.com/en/climbing/*
+// @exclude      https://www.thecrag.com/es/escalar/*/topo*
+// @exclude      https://www.thecrag.com/en/climbing/*/topo*
 // @icon         https://www.google.com/s2/favicons?domain=thecrag.com
 // @run-at       document-end
 // @grant        none
