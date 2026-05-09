@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         theCrag – Route - Cleanup
 // @namespace    https://github.com/killakalle/userscripts
-// @version      1.7.1
+// @version      1.7.2
 // @description  Hide unneeded sections on route detail pages
 // @author       killakalle
 // @match        https://www.thecrag.com/es/escalar/*/route/*
@@ -326,16 +326,15 @@
 
     if (aiRank !== -1 && offRank !== -1) {
       const diff = aiRank - offRank
-      if (diff <= -2)
-        tagHtml = '<span class="ai-tag tag-gift">Giveaway ⏬</span>'
+      if (diff <= -2) tagHtml = '<span class="ai-tag tag-gift">Giveaway</span>'
       else if (diff === -1)
-        tagHtml = '<span class="ai-tag tag-soft">Easy 🔽</span>'
+        tagHtml = '<span class="ai-tag tag-soft">Easy</span>'
       else if (diff === 0)
-        tagHtml = '<span class="ai-tag tag-solid">Alright ✅</span>'
+        tagHtml = '<span class="ai-tag tag-solid">Alright</span>'
       else if (diff === 1)
-        tagHtml = '<span class="ai-tag tag-stiff">Sandbag 🔼</span>'
+        tagHtml = '<span class="ai-tag tag-stiff">Stiff</span>'
       else if (diff >= 2)
-        tagHtml = '<span class="ai-tag tag-sandbag">Total Sandbag ⏫</span>'
+        tagHtml = '<span class="ai-tag tag-sandbag">Sandbag</span>'
     }
 
     // 4. Create LI
