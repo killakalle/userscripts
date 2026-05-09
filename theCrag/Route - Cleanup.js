@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         theCrag – Route - Cleanup
 // @namespace    https://github.com/killakalle/userscripts
-// @version      1.6.8
+// @version      1.6.9
 // @description  Hide unneeded sections on route detail pages
 // @author       killakalle
 // @match        https://www.thecrag.com/es/escalar/*/route/*
@@ -270,26 +270,88 @@
     const statsUl = document.querySelector('.headline__guts ul.stats')
     if (!statsUl) return
 
-    // Extract first grade (e.g. 6c from "6c [6b+ - 6c]")
+    // 1. Get the "Official" grade from the page (usually in the H1 or headline)
+    const officialGradeEl = document.querySelector(
+      '.headline__guts .grade.current'
+    )
+    const officialGrade = officialGradeEl
+      ? officialGradeEl.textContent.trim()
+      : null
+
+    // 2. Extract first AI grade (e.g. 6c from "6c [6b+ - 6c]")
     const match = graidValue.match(/^([0-9][abc]?\+?)/i)
     if (!match) return
+    const aiGrade = match[1]
 
-    const firstGrade = match[1]
+    // 3. Comparison Logic
+    const getGradeRank = g => {
+      if (!g) return 0
+      const ranks = [
+        '1',
+        '2',
+        '3',
+        '4',
+        '5',
+        '5a',
+        '5a+',
+        '5b',
+        '5b+',
+        '5c',
+        '5c+',
+        '6a',
+        '6a+',
+        '6b',
+        '6b+',
+        '6c',
+        '6c+',
+        '7a',
+        '7a+',
+        '7b',
+        '7b+',
+        '7c',
+        '7c+',
+        '8a',
+        '8a+',
+        '8b',
+        '8b+',
+        '8c',
+        '8c+',
+        '9a'
+      ]
+      return ranks.indexOf(g.toLowerCase())
+    }
 
+    let tagHtml = ''
+    if (officialGrade) {
+      const diff = getGradeRank(aiGrade) - getGradeRank(officialGrade)
+      if (diff <= -2) tagHtml = '<span class="ai-tag tag-gift">Giveaway</span>'
+      else if (diff === -1)
+        tagHtml = '<span class="ai-tag tag-soft">Soft</span>'
+      else if (diff === 0)
+        tagHtml = '<span class="ai-tag tag-solid">Solid</span>'
+      else if (diff === 1)
+        tagHtml = '<span class="ai-tag tag-stiff">Stiff</span>'
+      else if (diff >= 2)
+        tagHtml = '<span class="ai-tag tag-sandbag">Sandbag</span>'
+    }
+
+    // 4. Create LI
     const li = document.createElement('li')
-
-    // Create colored grade span
     const gradeSpan = document.createElement('span')
-    gradeSpan.textContent = firstGrade
-    gradeSpan.className = getGbClass(firstGrade)
+    gradeSpan.textContent = aiGrade
+    gradeSpan.className = getGbClass(aiGrade)
 
     li.innerHTML = `<strong>grAId:</strong> `
     li.appendChild(gradeSpan)
 
-    // Append remaining text (e.g. " [6b+ - 6c]")
-    const remainder = graidValue.slice(firstGrade.length)
+    const remainder = graidValue.slice(aiGrade.length)
     if (remainder.trim()) {
       li.appendChild(document.createTextNode(remainder))
+    }
+
+    // Append the calculated tag
+    if (tagHtml) {
+      li.insertAdjacentHTML('beforeend', tagHtml)
     }
 
     statsUl.appendChild(li)
@@ -523,6 +585,24 @@
           text-align: center;
         }
       }
+
+      /* Grade Comparison Tags */
+      .ai-tag {
+          display: inline-block;
+          padding: 1px 6px;
+          border-radius: 4px;
+          font-size: 10px;
+          font-weight: bold;
+          text-transform: uppercase;
+          margin-left: 6px;
+          vertical-align: middle;
+          line-height: 1.4;
+      }
+      .tag-gift    { background-color: #34D399; color: #fff; }
+      .tag-soft    { background-color: #A7F3D0; color: #064e3b; }
+      .tag-solid   { background-color: #E5E7EB; color: #374151; }
+      .tag-stiff   { background-color: #FDBA74; color: #7c2d12; }
+      .tag-sandbag { background-color: #EF4444; color: #fff; }
     `
     document.head.appendChild(style)
   }
