@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         theCrag – Route - Cleanup
 // @namespace    https://github.com/killakalle/userscripts
-// @version      1.6.9
+// @version      1.7.0
 // @description  Hide unneeded sections on route detail pages
 // @author       killakalle
 // @match        https://www.thecrag.com/es/escalar/*/route/*
@@ -270,10 +270,9 @@
     const statsUl = document.querySelector('.headline__guts ul.stats')
     if (!statsUl) return
 
-    // 1. Get the "Official" grade from the page (usually in the H1 or headline)
-    const officialGradeEl = document.querySelector(
-      '.headline__guts .grade.current'
-    )
+    // 1. Get the "Official" grade from the header
+    // The snippet shows it's inside .heading__t .grade
+    const officialGradeEl = document.querySelector('.heading__t .grade')
     const officialGrade = officialGradeEl
       ? officialGradeEl.textContent.trim()
       : null
@@ -285,7 +284,7 @@
 
     // 3. Comparison Logic
     const getGradeRank = g => {
-      if (!g) return 0
+      if (!g) return -1
       const ranks = [
         '1',
         '2',
@@ -322,21 +321,28 @@
     }
 
     let tagHtml = ''
-    if (officialGrade) {
-      const diff = getGradeRank(aiGrade) - getGradeRank(officialGrade)
-      if (diff <= -2) tagHtml = '<span class="ai-tag tag-gift">Giveaway</span>'
+    const aiRank = getGradeRank(aiGrade)
+    const offRank = getGradeRank(officialGrade)
+
+    if (aiRank !== -1 && offRank !== -1) {
+      const diff = aiRank - offRank
+      if (diff <= -2)
+        tagHtml = '<span class="ai-tag tag-gift">Giveaway ⏬</span>'
       else if (diff === -1)
-        tagHtml = '<span class="ai-tag tag-soft">Soft</span>'
+        tagHtml = '<span class="ai-tag tag-soft">Easy 🔽</span>'
       else if (diff === 0)
-        tagHtml = '<span class="ai-tag tag-solid">Solid</span>'
+        tagHtml = '<span class="ai-tag tag-solid">Alright ✅</span>'
       else if (diff === 1)
-        tagHtml = '<span class="ai-tag tag-stiff">Stiff</span>'
+        tagHtml = '<span class="ai-tag tag-stiff">Sandbag 🔼</span>'
       else if (diff >= 2)
-        tagHtml = '<span class="ai-tag tag-sandbag">Sandbag</span>'
+        tagHtml = '<span class="ai-tag tag-sandbag">Total Sandbag ⏫</span>'
     }
 
     // 4. Create LI
     const li = document.createElement('li')
+    li.className = 'graid-stat-item' // Good for debugging
+
+    // Create colored grade span
     const gradeSpan = document.createElement('span')
     gradeSpan.textContent = aiGrade
     gradeSpan.className = getGbClass(aiGrade)
@@ -344,6 +350,7 @@
     li.innerHTML = `<strong>grAId:</strong> `
     li.appendChild(gradeSpan)
 
+    // Append remaining text (e.g. " [6b+ - 6c]")
     const remainder = graidValue.slice(aiGrade.length)
     if (remainder.trim()) {
       li.appendChild(document.createTextNode(remainder))
