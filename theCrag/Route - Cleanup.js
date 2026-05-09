@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         theCrag – Route - Cleanup
 // @namespace    https://github.com/killakalle/userscripts
-// @version      1.7.0
+// @version      1.7.1
 // @description  Hide unneeded sections on route detail pages
 // @author       killakalle
 // @match        https://www.thecrag.com/es/escalar/*/route/*
@@ -593,23 +593,37 @@
         }
       }
 
-      /* Grade Comparison Tags */
+      /* Grade Comparison Tags - Cerulean Tide Integration */
       .ai-tag {
           display: inline-block;
-          padding: 1px 6px;
-          border-radius: 4px;
+          padding: 2px 8px;
+          border-radius: 10px;
           font-size: 10px;
           font-weight: bold;
           text-transform: uppercase;
-          margin-left: 6px;
+          margin-left: 8px;
           vertical-align: middle;
-          line-height: 1.4;
+          line-height: 1.2;
+          border: 1px solid rgba(255,255,255,0.1);
       }
-      .tag-gift    { background-color: #34D399; color: #fff; }
-      .tag-soft    { background-color: #A7F3D0; color: #064e3b; }
-      .tag-solid   { background-color: #E5E7EB; color: #374151; }
-      .tag-stiff   { background-color: #FDBA74; color: #7c2d12; }
-      .tag-sandbag { background-color: #EF4444; color: #fff; }
+      
+      /* Giveaway: Teal/Green hues from your --text4 */
+      .tag-gift    { background-color: #1a4d43; color: var(--text4); border-color: var(--text4); }
+      
+      /* Easy: Subtle Mint */
+      .tag-soft    { background-color: var(--bg4); color: var(--text2); border-color: var(--bg2); }
+      
+      /* Alright: Neutral Gray/Blue */
+      .tag-solid   { background-color: var(--bg9); color: var(--text3); border-color: var(--bg10); }
+      
+      /* Sandbag: Warning Orange */
+      .tag-stiff   { background-color: #5c3b1a; color: #ffb366; border-color: #ffb366; }
+      
+      /* Total Sandbag: Danger Red */
+      .tag-sandbag { background-color: #611111; color: #ff9999; border-color: #ef4444; }
+
+      /* Spacing for the new item */
+      .graid-stat-item { margin-top: 4px; display: block; }
     `
     document.head.appendChild(style)
   }
