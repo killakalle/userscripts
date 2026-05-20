@@ -1,7 +1,7 @@
 /* ==UserStyle==
 @namespace    USO Archive
 @author       killakalle
-@version      0.7.1
+@version      0.7.2
 @license      NONE
 @preprocessor uso
 @name         theCrag - Cerulean Tide (modified)
@@ -1290,5 +1290,43 @@ A deep blue theme for theCrag. As a dark theme, images and photos are slightly d
     .tick-selection.tick-selected .tick-text {
         color: var(--text1) !important;
         font-weight: bold;
+    }
+
+    /* 1. Turn off horizontal flex layout on the wrapper completely so column blocks collapse */
+    .node-listview .desc.multi.short,
+    .node-listview .desc.brief {
+        display: block !important;
+        position: relative !important;
+        width: 100% !important;
+        padding-right: 95px !important;
+        box-sizing: border-box !important;
+
+        /* Completely smash the native columns back to a regular single block column */
+        -webkit-column-count: 1 !important;
+        -moz-column-count: 1 !important;
+        column-count: 1 !important;
+        -webkit-column-width: auto !important;
+        -moz-column-width: auto !important;
+        column-width: auto !important;
+    }
+
+    /* 2. Standardize description text layout to stack vertically */
+    .node-listview .desc.multi.short>p,
+    .node-listview .desc.brief>p {
+        margin: 0 0 0.5em 0 !important;
+        text-align: left !important;
+        display: block !important;
+        width: auto !important;
+    }
+
+    /* 3. Use absolute positioning to force the equipment details to float on the right lane */
+    .node-listview .route-history.hist {
+        position: absolute !important;
+        top: 0 !important;
+        right: 95px !important;
+        /* Locks it precisely next to your 95px lane boundary */
+        text-align: right !important;
+        white-space: nowrap !important;
+        margin: 0 !important;
     }
 }
