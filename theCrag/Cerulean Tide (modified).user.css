@@ -1,7 +1,7 @@
 /* ==UserStyle==
 @namespace    USO Archive
 @author       killakalle
-@version      0.7.2
+@version      0.7.3
 @license      NONE
 @preprocessor uso
 @name         theCrag - Cerulean Tide (modified)
@@ -1292,16 +1292,16 @@ A deep blue theme for theCrag. As a dark theme, images and photos are slightly d
         font-weight: bold;
     }
 
-    /* 1. Turn off horizontal flex layout on the wrapper completely so column blocks collapse */
+    /* ==========================================================================
+   Responsive Layout Overhaul for Route Descriptions and Equipment Info
+   ========================================================================== */
+
+    /* 1. Global Reset: Remove the platform's multi-column layout engine on all screens */
     .node-listview .desc.multi.short,
     .node-listview .desc.brief {
         display: block !important;
-        position: relative !important;
         width: 100% !important;
-        padding-right: 95px !important;
         box-sizing: border-box !important;
-
-        /* Completely smash the native columns back to a regular single block column */
         -webkit-column-count: 1 !important;
         -moz-column-count: 1 !important;
         column-count: 1 !important;
@@ -1310,7 +1310,6 @@ A deep blue theme for theCrag. As a dark theme, images and photos are slightly d
         column-width: auto !important;
     }
 
-    /* 2. Standardize description text layout to stack vertically */
     .node-listview .desc.multi.short>p,
     .node-listview .desc.brief>p {
         margin: 0 0 0.5em 0 !important;
@@ -1319,14 +1318,45 @@ A deep blue theme for theCrag. As a dark theme, images and photos are slightly d
         width: auto !important;
     }
 
-    /* 3. Use absolute positioning to force the equipment details to float on the right lane */
-    .node-listview .route-history.hist {
-        position: absolute !important;
-        top: 0 !important;
-        right: 95px !important;
-        /* Locks it precisely next to your 95px lane boundary */
-        text-align: right !important;
-        white-space: nowrap !important;
-        margin: 0 !important;
+    /* 2. Mobile View Default: Stack items safely to prevent overlapping on narrow screens */
+    @media only screen and (max-width: 767px) {
+
+        .node-listview .desc.multi.short,
+        .node-listview .desc.brief {
+            padding-right: 0 !important;
+            /* Use full width on mobile */
+        }
+
+        .node-listview .route-history.hist {
+            display: block !important;
+            position: static !important;
+            /* Back into normal text flow */
+            text-align: right !important;
+            margin-top: 4px !important;
+            width: 100% !important;
+            padding-right: 20px !important;
+            /* Keeps it slightly clear of the right edge */
+        }
+    }
+
+    /* 3. Desktop View Only: Float equipment to the right when there is plenty of room */
+    @media only screen and (min-width: 768px) {
+
+        .node-listview .desc.multi.short,
+        .node-listview .desc.brief {
+            position: relative !important;
+            padding-right: 95px !important;
+            /* Keeps the clean lane open for grades */
+        }
+
+        .node-listview .route-history.hist {
+            position: absolute !important;
+            top: 0 !important;
+            right: 95px !important;
+            /* Snaps perfectly beside the grade lane */
+            text-align: right !important;
+            white-space: nowrap !important;
+            margin: 0 !important;
+        }
     }
 }
