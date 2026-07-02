@@ -1,7 +1,7 @@
 /* ==UserStyle==
 @namespace    USO Archive
 @author       killakalle
-@version      0.7.4
+@version      0.7.5
 @license      NONE
 @preprocessor uso
 @name         theCrag - Cerulean Tide (modified)
@@ -1451,12 +1451,24 @@ A deep blue theme for theCrag. As a dark theme, images and photos are slightly d
        OpenStreetMap "Fake" Dark Mode & Leaflet UI Fixes
        ========================================================================== */
        
-    /* 1. Invert the map tiles to create a dark theme, then restore original colors */
+    /* 1. Remove the filter from the parent container */
     .leaflet-tile-pane {
+        filter: none !important;
+    }
+    
+    /* 2. Apply the dark mode filter directly to the map images */
+    .leaflet-tile-pane img {
         filter: invert(100%) hue-rotate(180deg) brightness(85%) contrast(90%) !important;
     }
     
-    /* 2. Darken the map controls (Zoom, Fullscreen, Locate, Layers) */
+    /* 3. EXCEPTIONS: Remove the filter if the image URL is from MapTiler, Satellite, or Terrain */
+    .leaflet-tile-pane img[src*="maptiler"],
+    .leaflet-tile-pane img[src*="satellite"],
+    .leaflet-tile-pane img[src*="terrain"] {
+        filter: none !important;
+    }
+    
+    /* 4. Darken the map controls (Zoom, Fullscreen, Locate, Layers) */
     .leaflet-bar,
     .leaflet-bar a,
     .leaflet-control-layers,
@@ -1475,7 +1487,7 @@ A deep blue theme for theCrag. As a dark theme, images and photos are slightly d
         color: var(--text1) !important;
     }
     
-    /* 3. Darken the attribution strip at the bottom */
+    /* 5. Darken the attribution strip at the bottom */
     .leaflet-control-attribution {
         background-color: rgba(0, 26, 44, 0.7) !important; /* using --bg8 with opacity */
         color: var(--text3) !important;
@@ -1485,7 +1497,7 @@ A deep blue theme for theCrag. As a dark theme, images and photos are slightly d
         color: var(--text4) !important;
     }
     
-    /* 4. Fix text visibility inside the map labels and layer checkboxes */
+    /* 6. Fix text visibility inside the map labels and layer checkboxes */
     .leaflet-control-layers-list {
         color: var(--text2) !important;
     }
@@ -1499,7 +1511,7 @@ A deep blue theme for theCrag. As a dark theme, images and photos are slightly d
     .tcm-label-arrow {
         border-bottom-color: var(--bg8) !important;
     }
-    /* 5. Convert the milky white area mask into a subtle dark shadow mask */
+    /* 7. Convert the milky white area mask into a subtle dark shadow mask */
     .leaflet-overlay-pane path[fill="#fff"],
     .leaflet-overlay-pane path[fill="#ffffff"],
     .tcm-f-base {
@@ -1507,7 +1519,7 @@ A deep blue theme for theCrag. As a dark theme, images and photos are slightly d
         fill-opacity: 0.25 !important; /* Lowered from 0.6 for a much lighter shadow */
     }
 
-    /* 6. Tone down the bright white region boundary lines */
+    /* 8. Tone down the bright white region boundary lines */
     .leaflet-overlay-pane path[stroke="#fff"],
     .leaflet-overlay-pane path[stroke="#ffffff"] {
         stroke: var(--text4) !important; 
