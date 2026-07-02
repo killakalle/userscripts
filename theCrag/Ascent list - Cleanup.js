@@ -2,8 +2,8 @@
 // @name         theCrag - Ascent list - Cleanup
 // @namespace    https://github.com/killakalle/userscripts
 // @author       killakalle
-// @version      0.4.3
-// @description  Hides the search facet and pagination on the ascent list, removes certain rows from the search results table, and adds a button to toggle beta ascents.
+// @version      0.5.0
+// @description  Hides the search facet and pagination on the ascent list, removes certain rows from the search results table, adds the ascent date per row, and adds a button to toggle beta ascents.
 // @match        *://www.thecrag.com/*/ascents*
 // @icon         https://www.google.com/s2/favicons?domain=thecrag.com
 // @grant        none
@@ -14,7 +14,6 @@
 
 /*
   TODO SECTION:
-  - Add ascent date per line (move from group header to individual row)
   - Remove theCrag's automatic key word highlighting such as "crux", "good", etc. which can be misleading and is not user-configurable
 */
 
@@ -51,12 +50,20 @@
   if (table) {
     const theadRow = table.querySelector('thead tr')
 
-    // A. Add "Comentarios" Header
+    // A. Add "Comentarios" and "Fecha" Headers
     if (theadRow && !document.getElementById('added-comment-header')) {
       const commentHeader = document.createElement('th')
       commentHeader.id = 'added-comment-header'
       commentHeader.textContent = 'Comentarios'
       theadRow.insertBefore(commentHeader, theadRow.cells[4])
+    }
+
+    if (theadRow && !document.getElementById('added-date-header')) {
+      const dateHeader = document.createElement('th')
+      dateHeader.id = 'added-date-header'
+      dateHeader.textContent = 'Fecha'
+      dateHeader.style.width = '100px'
+      theadRow.appendChild(dateHeader)
     }
 
     // B. Force Layout and Widths
@@ -66,57 +73,43 @@
 
       if (theadRow.cells[3]) theadRow.cells[3].style.display = 'none'
 
-      theadRow.cells[0].style.width = '45px'
-      theadRow.cells[1].style.width = '55px'
-      theadRow.cells[5].style.width = '125px'
-      theadRow.cells[6].style.width = '120px'
+      if (theadRow.cells[0]) theadRow.cells[0].style.width = '45px'
+      if (theadRow.cells[1]) theadRow.cells[1].style.width = '55px'
+      if (theadRow.cells[5]) theadRow.cells[5].style.width = '125px'
+      if (theadRow.cells[6]) theadRow.cells[6].style.width = '120px'
 
       const viaHeader = theadRow.cells[2]
       const commentHeader = document.getElementById('added-comment-header')
 
       if (isRouteView) {
         if (viaHeader) viaHeader.style.display = 'none'
-        commentHeader.style.width = 'auto'
+        if (commentHeader) commentHeader.style.width = 'auto'
       } else {
         if (viaHeader) viaHeader.style.width = '22%'
-        commentHeader.style.width = '44%'
+        if (commentHeader) commentHeader.style.width = '44%'
       }
     }
 
     // C. Process body rows
     const bodyRows = Array.from(table.querySelectorAll('tbody tr'))
+    let currentDate = ''
+
     bodyRows.forEach(row => {
-      // Remove Group/Date headers (Keeping this for now as per TODO)
-      if (row.querySelector('.group')) {
+      // Group/Date header rows: capture the date, then remove the row
+      const groupCell = row.querySelector('.group')
+      if (groupCell) {
+        const groupB = groupCell.querySelector('b')
+        if (groupB) {
+          const clone = groupB.cloneNode(true)
+          const crumb = clone.querySelector('.crumbtrail-partial')
+          if (crumb) crumb.remove()
+          currentDate = clone.textContent.replace(/-\s*$/, '').trim()
+        }
         row.remove()
         return
       }
 
-      if (row.cells[3]) row.cells[3].style.display = 'none'
-      if (isRouteView && row.cells[2]) row.cells[2].style.display = 'none'
-
-      // Ensure vertical alignment for all existing cells to fix misalignment
-      Array.from(row.cells).forEach(cell => {
-        cell.style.verticalAlign = 'top'
-        cell.style.paddingTop = '8px'
-      })
-
-      // Create comment cell
-      let commentCell = row.querySelector('.comment-cell')
-      if (!row.classList.contains('comment-row') && !commentCell) {
-        commentCell = row.insertCell(4)
-        commentCell.className = 'comment-cell'
-        Object.assign(commentCell.style, {
-          fontSize: '12px',
-          padding: '8px',
-          verticalAlign: 'top',
-          lineHeight: '1.4',
-          overflow: 'hidden',
-          wordWrap: 'break-word'
-        })
-      }
-
-      // Move comments from .comment-row
+      // Comment rows: move their content into the preceding ascent row, then remove
       if (row.classList.contains('comment-row')) {
         const prevRow = row.previousElementSibling
         const targetCell = prevRow
@@ -127,9 +120,9 @@
           commentBlocks.forEach(block => {
             const markdownDiv = block.querySelector('.markdown')
             if (markdownDiv) {
-              const isPrivate = markdownDiv
-                .getAttribute('style')
-                ?.includes('#f4f4f4')
+              const isPrivate =
+                window.getComputedStyle(markdownDiv).backgroundColor ===
+                'rgb(244, 244, 244)'
               const wrapper = document.createElement('div')
               wrapper.style.marginBottom = '6px'
               if (isPrivate) {
@@ -149,6 +142,45 @@
           })
         }
         row.remove()
+        return
+      }
+
+      // Real ascent row
+      if (row.cells[3]) row.cells[3].style.display = 'none'
+      if (isRouteView && row.cells[2]) row.cells[2].style.display = 'none'
+
+      // Ensure vertical alignment for all existing cells to fix misalignment
+      Array.from(row.cells).forEach(cell => {
+        cell.style.verticalAlign = 'top'
+        cell.style.paddingTop = '8px'
+      })
+
+      // Create comment cell
+      if (!row.querySelector('.comment-cell')) {
+        const commentCell = row.insertCell(4)
+        commentCell.className = 'comment-cell'
+        Object.assign(commentCell.style, {
+          fontSize: '12px',
+          padding: '8px',
+          paddingTop: '8px',
+          verticalAlign: 'top',
+          lineHeight: '1.4',
+          overflow: 'hidden',
+          wordWrap: 'break-word'
+        })
+      }
+
+      // Add the ascent date, carried forward from the last .group row seen
+      if (!row.querySelector('.date-cell')) {
+        const dateCell = row.insertCell(-1)
+        dateCell.className = 'date-cell'
+        dateCell.textContent = currentDate
+        Object.assign(dateCell.style, {
+          fontSize: '12px',
+          padding: '8px',
+          verticalAlign: 'top',
+          whiteSpace: 'nowrap'
+        })
       }
     })
   }
