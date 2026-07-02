@@ -1,12 +1,12 @@
 /* ==UserStyle==
 @namespace    USO Archive
 @author       killakalle
-@version      0.7.3
+@version      0.7.4
 @license      NONE
 @preprocessor uso
 @name         theCrag - Cerulean Tide (modified)
 @description  Based on the original style by etcho https://userstyles.world/api/style/21169.user.css
-Made slight modifications where necessary.
+Made slight modifications where necessary. 
 A deep blue theme for theCrag. As a dark theme, images and photos are slightly darker to be more pleasing to the eyes.
 
 ==/UserStyle== */
@@ -1358,5 +1358,159 @@ A deep blue theme for theCrag. As a dark theme, images and photos are slightly d
             white-space: nowrap !important;
             margin: 0 !important;
         }
+    }
+    
+    /* ==========================================================================
+       Path Elevation Chart Dark Mode Fixes
+       ========================================================================== */
+    
+    .PathElevationChart,
+    .PathElevationChart__container,
+    .PathElevationChart__svg {
+        background-color: transparent !important; 
+    }
+
+    /* Grid and Axes lines */
+    .PathElevationChart__tick-line,
+    .PathElevationChart__grid-line {
+        stroke: var(--bg4) !important;
+    }
+    
+    /* SVG Text/Labels */
+    .PathElevationChart__tick-label,
+    .PathElevationChart__axis-label {
+        fill: var(--text2) !important;
+    }
+    
+    /* Hover line and points */
+    .PathElevationChart__hover-line {
+        stroke: var(--text4) !important;
+    }
+    .PathElevationChart__hover-point {
+        fill: var(--text4) !important;
+        stroke: var(--bg8) !important;
+    }
+    
+    /* Tooltip Floating Box */
+    .PathElevationChart__tooltip {
+        background-color: var(--bg8) !important;
+        color: var(--text1) !important;
+        border: 1px solid var(--bg4) !important;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.5) !important;
+    }
+    
+    .PathElevationChart__tooltip-close {
+        color: var(--text3) !important;
+        background: transparent !important;
+        border: none !important;
+    }
+    
+    .PathElevationChart__tooltip-close:hover {
+        color: var(--text4) !important;
+    }
+    
+    /* Time & Speed Bottom Panel */
+    .PathElevationChart__time-panel {
+        background-color: var(--bg7) !important;
+        border-top: 1px solid var(--bg5) !important;
+        color: var(--text2) !important;
+    }
+    
+    .PathElevationChart__time-value {
+        color: var(--text1) !important;
+        font-weight: bold;
+    }
+    
+    /* Select Dropdown */
+    .PathElevationChart__speed-select {
+        background-color: var(--bg5) !important;
+        color: var(--text2) !important;
+        border: 1px solid var(--bg4) !important;
+    }
+    
+    /* Zoom Controls */
+    .PathElevationChart__controls button {
+        background-color: var(--bg9) !important;
+        color: var(--text2) !important;
+        border: 1px solid var(--bg4) !important;
+    }
+    
+    .PathElevationChart__controls button:hover {
+        background-color: var(--bg10) !important;
+        color: var(--text4) !important;
+        border-color: var(--bg3) !important;
+    }
+
+    /* Target POI icons if they need contrast adjustments */
+    .PathElevationChart__poi-icon {
+        filter: var(--darken-img); 
+    }
+    
+    
+    /* ==========================================================================
+       OpenStreetMap "Fake" Dark Mode & Leaflet UI Fixes
+       ========================================================================== */
+       
+    /* 1. Invert the map tiles to create a dark theme, then restore original colors */
+    .leaflet-tile-pane {
+        filter: invert(100%) hue-rotate(180deg) brightness(85%) contrast(90%) !important;
+    }
+    
+    /* 2. Darken the map controls (Zoom, Fullscreen, Locate, Layers) */
+    .leaflet-bar,
+    .leaflet-bar a,
+    .leaflet-control-layers,
+    .leaflet-control-layers-expanded {
+        background-color: var(--bg8) !important;
+        color: var(--text2) !important;
+        border-color: var(--bg4) !important;
+    }
+    
+    .leaflet-bar a {
+        border-bottom: 1px solid var(--bg4) !important;
+    }
+    
+    .leaflet-bar a:hover {
+        background-color: var(--bg6) !important;
+        color: var(--text1) !important;
+    }
+    
+    /* 3. Darken the attribution strip at the bottom */
+    .leaflet-control-attribution {
+        background-color: rgba(0, 26, 44, 0.7) !important; /* using --bg8 with opacity */
+        color: var(--text3) !important;
+    }
+    
+    .leaflet-control-attribution a {
+        color: var(--text4) !important;
+    }
+    
+    /* 4. Fix text visibility inside the map labels and layer checkboxes */
+    .leaflet-control-layers-list {
+        color: var(--text2) !important;
+    }
+    
+    .tcm-label__name {
+        background-color: var(--bg8) !important;
+        color: var(--text1) !important;
+        border: 1px solid var(--bg4) !important;
+    }
+    
+    .tcm-label-arrow {
+        border-bottom-color: var(--bg8) !important;
+    }
+    /* 5. Convert the milky white area mask into a subtle dark shadow mask */
+    .leaflet-overlay-pane path[fill="#fff"],
+    .leaflet-overlay-pane path[fill="#ffffff"],
+    .tcm-f-base {
+        fill: var(--bg10) !important; 
+        fill-opacity: 0.25 !important; /* Lowered from 0.6 for a much lighter shadow */
+    }
+
+    /* 6. Tone down the bright white region boundary lines */
+    .leaflet-overlay-pane path[stroke="#fff"],
+    .leaflet-overlay-pane path[stroke="#ffffff"] {
+        stroke: var(--text4) !important; 
+        stroke-opacity: 0.6 !important;
     }
 }
