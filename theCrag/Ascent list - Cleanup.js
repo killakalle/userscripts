@@ -2,7 +2,7 @@
 // @name         theCrag - Ascent list - Cleanup
 // @namespace    https://github.com/killakalle/userscripts
 // @author       killakalle
-// @version      0.5.0
+// @version      0.5.1
 // @description  Hides the search facet and pagination on the ascent list, removes certain rows from the search results table, adds the ascent date per row, and adds a button to toggle beta ascents.
 // @match        *://www.thecrag.com/*/ascents*
 // @icon         https://www.google.com/s2/favicons?domain=thecrag.com
