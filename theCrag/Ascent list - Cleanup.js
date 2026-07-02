@@ -120,9 +120,10 @@
           commentBlocks.forEach(block => {
             const markdownDiv = block.querySelector('.markdown')
             if (markdownDiv) {
+              const styleAttr = markdownDiv.getAttribute('style') || ''
               const isPrivate =
-                window.getComputedStyle(markdownDiv).backgroundColor ===
-                'rgb(244, 244, 244)'
+                /#f4f4f4/i.test(styleAttr) ||
+                /rgb\(\s*244\s*,\s*244\s*,\s*244\s*\)/i.test(styleAttr)
               const wrapper = document.createElement('div')
               wrapper.style.marginBottom = '6px'
               if (isPrivate) {
