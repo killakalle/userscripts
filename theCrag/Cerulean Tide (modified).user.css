@@ -1,7 +1,7 @@
 /* ==UserStyle==
 @namespace    USO Archive
 @author       killakalle
-@version      0.7.10
+@version      0.7.11
 @license      NONE
 @preprocessor uso
 @name         theCrag - Cerulean Tide (modified)
@@ -164,8 +164,12 @@ A deep blue theme for theCrag. As a dark theme, images and photos are slightly d
 
     /* Route/area links keep the browser's default visited-link color
        (a dark, low-contrast purple) since nothing set it, so previously
-       clicked routes were nearly invisible against the dark background. */
-    a:visited {
+       clicked routes were nearly invisible against the dark background.
+       Excludes anything button-styled (.btn, .btn-warning, the dashboard
+       notification badge, etc.) since those set their own text color
+       (often white-on-color) that :visited has no business overriding -
+       that's what broke the notification bell/count badge. */
+    a:visited:not([class*="btn"]) {
         color: var(--text4);
     }
 
