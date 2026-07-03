@@ -1,7 +1,7 @@
 /* ==UserStyle==
 @namespace    USO Archive
 @author       killakalle
-@version      0.7.5
+@version      0.7.6
 @license      NONE
 @preprocessor uso
 @name         theCrag - Cerulean Tide (modified)
@@ -1522,7 +1522,71 @@ A deep blue theme for theCrag. As a dark theme, images and photos are slightly d
     /* 8. Tone down the bright white region boundary lines */
     .leaflet-overlay-pane path[stroke="#fff"],
     .leaflet-overlay-pane path[stroke="#ffffff"] {
-        stroke: var(--text4) !important; 
+        stroke: var(--text4) !important;
         stroke-opacity: 0.6 !important;
+    }
+
+    /* ==========================================================================
+       OpenLayers "Locate/Edit node" Map Dark Mode Fixes
+       (the /locate boundary + POI editor renders with OpenLayers instead of
+       Leaflet, so none of the .leaflet-* rules above ever match here)
+       ========================================================================== */
+
+    /* 1. Invert the map canvas the same way the Leaflet tiles are inverted.
+       OpenLayers draws tiles and drawn features onto a single <canvas> per
+       layer, so there's no per-tile <img src> to exclude satellite imagery
+       the way the Leaflet fix above does - this covers the OSM base layer. */
+    .ol-layer canvas {
+        filter: invert(100%) hue-rotate(180deg) brightness(85%) contrast(90%) !important;
+    }
+
+    /* 2. Darken the zoom / fullscreen / locate-me / layer-switcher controls.
+       All of these buttons live inside a wrapper carrying .ol-control. */
+    .ol-control button {
+        background-color: var(--bg8) !important;
+        color: var(--text2) !important;
+        border-color: var(--bg4) !important;
+    }
+
+    .ol-control button:hover {
+        background-color: var(--bg6) !important;
+        color: var(--text1) !important;
+    }
+
+    /* 3. Layer switcher flyout panel (base map + features checkboxes) */
+    .layer-switcher .panel {
+        background-color: var(--bg8) !important;
+        border: 1px solid var(--bg4) !important;
+    }
+
+    .layer-switcher .panel label {
+        color: var(--text2) !important;
+    }
+
+    /* 4. Attribution strip and scale line */
+    .ol-attribution {
+        background-color: rgba(0, 26, 44, 0.7) !important;
+        color: var(--text3) !important;
+    }
+
+    .ol-attribution a {
+        color: var(--text4) !important;
+    }
+
+    .ol-scale-line-inner {
+        color: var(--text2) !important;
+        border-color: var(--text2) !important;
+    }
+
+    /* 5. Accordion section headers (Vías / Rutas / POIs / Help) had no
+       explicit background or text color of their own, so they fell back to
+       near-matching dark-on-dark colors against the page background. */
+    .accordion-header {
+        background-color: var(--bg6) !important;
+        color: var(--text1) !important;
+    }
+
+    .accordion-body {
+        background-color: var(--bg8) !important;
     }
 }
