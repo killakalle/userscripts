@@ -1,7 +1,7 @@
 /* ==UserStyle==
 @namespace    USO Archive
 @author       killakalle
-@version      0.7.9
+@version      0.7.10
 @license      NONE
 @preprocessor uso
 @name         theCrag - Cerulean Tide (modified)
@@ -1619,6 +1619,14 @@ A deep blue theme for theCrag. As a dark theme, images and photos are slightly d
        near-matching dark-on-dark colors against the page background. */
     .accordion-header {
         background-color: var(--bg6) !important;
+        color: var(--text1) !important;
+    }
+
+    /* The +/x toggle glyph is generated content with its own explicit
+       brownish color set directly on the ::after rule (fence-1.1.0.css),
+       so it doesn't pick up the color set on .accordion-header above -
+       an inherited value never overrides an element's own specified one. */
+    .accordion-header::after {
         color: var(--text1) !important;
     }
 
