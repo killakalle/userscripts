@@ -1,7 +1,7 @@
 /* ==UserStyle==
 @namespace    USO Archive
 @author       killakalle
-@version      0.7.11
+@version      0.7.12
 @license      NONE
 @preprocessor uso
 @name         theCrag - Cerulean Tide (modified)
@@ -561,6 +561,46 @@ A deep blue theme for theCrag. As a dark theme, images and photos are slightly d
         background-color: var(--bg10);
         border-color: var(--bg8);
         background-image: none;
+    }
+
+    /* Select2 v4 widgets (e.g. the POI/Path "Tipo" dropdown in the /locate
+       modals) use different, BEM-style class names to the v3 rules above,
+       so none of those applied and the control stayed white. */
+    .select2-container--default .select2-selection--single {
+        background-color: var(--bg8) !important;
+        border-color: var(--bg4) !important;
+    }
+
+    .select2-container--default .select2-selection--single .select2-selection__rendered {
+        color: var(--text2) !important;
+    }
+
+    .select2-container--default .select2-selection--single .select2-selection__arrow b {
+        border-color: var(--text2) transparent transparent transparent !important;
+    }
+
+    .select2-dropdown {
+        background-color: var(--bg8) !important;
+        border-color: var(--bg4) !important;
+    }
+
+    .select2-search--dropdown .select2-search__field {
+        background-color: var(--bg9) !important;
+        color: var(--text2) !important;
+        border-color: var(--bg4) !important;
+    }
+
+    .select2-results__option {
+        color: var(--text2) !important;
+    }
+
+    .select2-container--default .select2-results__option--highlighted[aria-selected] {
+        background-color: var(--bg2) !important;
+        color: var(--text1) !important;
+    }
+
+    .select2-container--default .select2-results__option[aria-selected="true"] {
+        background-color: var(--bg5) !important;
     }
 
     #login #btnLogin,
