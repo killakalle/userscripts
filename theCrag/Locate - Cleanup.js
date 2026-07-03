@@ -9,6 +9,8 @@
 // @grant         none
 // @run-at        document-end
 // @license       MIT
+// @downloadURL   https://update.greasyfork.org/scripts/585406/theCrag%20-%20Locate%20-%20Cleanup.user.js
+// @updateURL     https://update.greasyfork.org/scripts/585406/theCrag%20-%20Locate%20-%20Cleanup.meta.js
 // ==/UserScript==
 
 ;(function () {
