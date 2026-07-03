@@ -1,7 +1,7 @@
 /* ==UserStyle==
 @namespace    USO Archive
 @author       killakalle
-@version      0.7.7
+@version      0.7.8
 @license      NONE
 @preprocessor uso
 @name         theCrag - Cerulean Tide (modified)
@@ -159,6 +159,13 @@ A deep blue theme for theCrag. As a dark theme, images and photos are slightly d
     }
 
     a {
+        color: var(--text4);
+    }
+
+    /* Route/area links keep the browser's default visited-link color
+       (a dark, low-contrast purple) since nothing set it, so previously
+       clicked routes were nearly invisible against the dark background. */
+    a:visited {
         color: var(--text4);
     }
 
@@ -1574,6 +1581,10 @@ A deep blue theme for theCrag. As a dark theme, images and photos are slightly d
 
     .ol-attribution a {
         color: var(--text4) !important;
+    }
+
+    .ol-scale-line {
+        background-color: var(--bg8) !important;
     }
 
     .ol-scale-line-inner {
