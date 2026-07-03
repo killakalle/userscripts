@@ -1,7 +1,7 @@
 /* ==UserStyle==
 @namespace    USO Archive
 @author       killakalle
-@version      0.7.6
+@version      0.7.7
 @license      NONE
 @preprocessor uso
 @name         theCrag - Cerulean Tide (modified)
@@ -1535,8 +1535,11 @@ A deep blue theme for theCrag. As a dark theme, images and photos are slightly d
     /* 1. Invert the map canvas the same way the Leaflet tiles are inverted.
        OpenLayers draws tiles and drawn features onto a single <canvas> per
        layer, so there's no per-tile <img src> to exclude satellite imagery
-       the way the Leaflet fix above does - this covers the OSM base layer. */
-    .ol-layer canvas {
+       the way the Leaflet fix above does. Instead, the companion userscript
+       "Locate - Satellite layer dark mode fix.js" toggles a
+       .tc-satellite-active class on #map when the MapTiler satellite base
+       layer is selected, so the invert below only applies to the OSM tiles. */
+    #map:not(.tc-satellite-active) .ol-layer canvas {
         filter: invert(100%) hue-rotate(180deg) brightness(85%) contrast(90%) !important;
     }
 
@@ -1588,5 +1591,29 @@ A deep blue theme for theCrag. As a dark theme, images and photos are slightly d
 
     .accordion-body {
         background-color: var(--bg8) !important;
+    }
+
+    /* 6. The Navigate/Draw/Save toolbar sits in a container with an inline
+       "background: #fff" set by the page itself, which no CSS rule below it
+       was overriding, leaving a bright white bar above the accordion. */
+    #map_sticky {
+        background: var(--bg7) !important;
+    }
+
+    /* 7. Route/Path/POI table header cells (Tipo/Name/Descripción/Acción)
+       only had their background darkened; the site's own header text color
+       is a brownish accent that's illegible against the new dark background. */
+    .routetable th,
+    .areatable th {
+        color: var(--text2) !important;
+    }
+
+    /* 8. The perimeter-editing help text/list also used that same brownish
+       accent color with no background of its own to make it legible. */
+    #locate_help,
+    #locate_help li,
+    #locate_help ol,
+    #locate_help ul {
+        color: var(--text2) !important;
     }
 }
