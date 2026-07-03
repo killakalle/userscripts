@@ -1,7 +1,7 @@
 /* ==UserStyle==
 @namespace    USO Archive
 @author       killakalle
-@version      0.7.5
+@version      0.7.12
 @license      NONE
 @preprocessor uso
 @name         theCrag - Cerulean Tide (modified)
@@ -159,6 +159,17 @@ A deep blue theme for theCrag. As a dark theme, images and photos are slightly d
     }
 
     a {
+        color: var(--text4);
+    }
+
+    /* Route/area links keep the browser's default visited-link color
+       (a dark, low-contrast purple) since nothing set it, so previously
+       clicked routes were nearly invisible against the dark background.
+       Excludes anything button-styled (.btn, .btn-warning, the dashboard
+       notification badge, etc.) since those set their own text color
+       (often white-on-color) that :visited has no business overriding -
+       that's what broke the notification bell/count badge. */
+    a:visited:not([class*="btn"]) {
         color: var(--text4);
     }
 
@@ -552,6 +563,46 @@ A deep blue theme for theCrag. As a dark theme, images and photos are slightly d
         background-image: none;
     }
 
+    /* Select2 v4 widgets (e.g. the POI/Path "Tipo" dropdown in the /locate
+       modals) use different, BEM-style class names to the v3 rules above,
+       so none of those applied and the control stayed white. */
+    .select2-container--default .select2-selection--single {
+        background-color: var(--bg8) !important;
+        border-color: var(--bg4) !important;
+    }
+
+    .select2-container--default .select2-selection--single .select2-selection__rendered {
+        color: var(--text2) !important;
+    }
+
+    .select2-container--default .select2-selection--single .select2-selection__arrow b {
+        border-color: var(--text2) transparent transparent transparent !important;
+    }
+
+    .select2-dropdown {
+        background-color: var(--bg8) !important;
+        border-color: var(--bg4) !important;
+    }
+
+    .select2-search--dropdown .select2-search__field {
+        background-color: var(--bg9) !important;
+        color: var(--text2) !important;
+        border-color: var(--bg4) !important;
+    }
+
+    .select2-results__option {
+        color: var(--text2) !important;
+    }
+
+    .select2-container--default .select2-results__option--highlighted[aria-selected] {
+        background-color: var(--bg2) !important;
+        color: var(--text1) !important;
+    }
+
+    .select2-container--default .select2-results__option[aria-selected="true"] {
+        background-color: var(--bg5) !important;
+    }
+
     #login #btnLogin,
     .standardButton input,
     .exceptionButton input,
@@ -629,6 +680,14 @@ A deep blue theme for theCrag. As a dark theme, images and photos are slightly d
     .routetable td,
     .areatable td {
         border-color: var(--bg4);
+        color: var(--text2) !important;
+    }
+
+    /* Route/area names in these tables (rt_name/toponum cells) carry the
+       site's own low-contrast default text color, not our theme's, so they
+       stayed hard to read even once the surrounding cell/row was darkened. */
+    .primary-node-name {
+        color: var(--text2) !important;
     }
 
     .card {
@@ -1054,6 +1113,20 @@ A deep blue theme for theCrag. As a dark theme, images and photos are slightly d
 
     .modal {
         background-color: var(--bg6);
+    }
+
+    /* Bootstrap's default .close button (modal "x", and the accordion
+       section remove-buttons on the /locate page) is black text at 20%
+       opacity, meant for light backgrounds - nearly invisible here. */
+    .close {
+        color: var(--text2) !important;
+        opacity: 0.7 !important;
+        text-shadow: none !important;
+    }
+
+    .close:hover {
+        color: var(--text1) !important;
+        opacity: 1 !important;
     }
 
     #log-ascent-modal .ascent-tick-wrapper,
@@ -1522,7 +1595,110 @@ A deep blue theme for theCrag. As a dark theme, images and photos are slightly d
     /* 8. Tone down the bright white region boundary lines */
     .leaflet-overlay-pane path[stroke="#fff"],
     .leaflet-overlay-pane path[stroke="#ffffff"] {
-        stroke: var(--text4) !important; 
+        stroke: var(--text4) !important;
         stroke-opacity: 0.6 !important;
+    }
+
+    /* ==========================================================================
+       OpenLayers "Locate/Edit node" Map Dark Mode Fixes
+       (the /locate boundary + POI editor renders with OpenLayers instead of
+       Leaflet, so none of the .leaflet-* rules above ever match here)
+       ========================================================================== */
+
+    /* 1. Invert the map canvas the same way the Leaflet tiles are inverted.
+       OpenLayers draws tiles and drawn features onto a single <canvas> per
+       layer, so there's no per-tile <img src> to exclude satellite imagery
+       the way the Leaflet fix above does. Instead, the companion userscript
+       "Locate - Satellite layer dark mode fix.js" toggles a
+       .tc-satellite-active class on #map when the MapTiler satellite base
+       layer is selected, so the invert below only applies to the OSM tiles. */
+    #map:not(.tc-satellite-active) .ol-layer canvas {
+        filter: invert(100%) hue-rotate(180deg) brightness(85%) contrast(90%) !important;
+    }
+
+    /* 2. Darken the zoom / fullscreen / locate-me / layer-switcher controls.
+       All of these buttons live inside a wrapper carrying .ol-control. */
+    .ol-control button {
+        background-color: var(--bg8) !important;
+        color: var(--text2) !important;
+        border-color: var(--bg4) !important;
+    }
+
+    .ol-control button:hover {
+        background-color: var(--bg6) !important;
+        color: var(--text1) !important;
+    }
+
+    /* 3. Layer switcher flyout panel (base map + features checkboxes) */
+    .layer-switcher .panel {
+        background-color: var(--bg8) !important;
+        border: 1px solid var(--bg4) !important;
+    }
+
+    .layer-switcher .panel label {
+        color: var(--text2) !important;
+    }
+
+    /* 4. Attribution strip and scale line */
+    .ol-attribution {
+        background-color: rgba(0, 26, 44, 0.7) !important;
+        color: var(--text3) !important;
+    }
+
+    .ol-attribution a {
+        color: var(--text4) !important;
+    }
+
+    .ol-scale-line {
+        background-color: var(--bg8) !important;
+    }
+
+    .ol-scale-line-inner {
+        color: var(--text2) !important;
+        border-color: var(--text2) !important;
+    }
+
+    /* 5. Accordion section headers (Vías / Rutas / POIs / Help) had no
+       explicit background or text color of their own, so they fell back to
+       near-matching dark-on-dark colors against the page background. */
+    .accordion-header {
+        background-color: var(--bg6) !important;
+        color: var(--text1) !important;
+    }
+
+    /* The +/x toggle glyph is generated content with its own explicit
+       brownish color set directly on the ::after rule (fence-1.1.0.css),
+       so it doesn't pick up the color set on .accordion-header above -
+       an inherited value never overrides an element's own specified one. */
+    .accordion-header::after {
+        color: var(--text1) !important;
+    }
+
+    .accordion-body {
+        background-color: var(--bg8) !important;
+    }
+
+    /* 6. The Navigate/Draw/Save toolbar sits in a container with an inline
+       "background: #fff" set by the page itself, which no CSS rule below it
+       was overriding, leaving a bright white bar above the accordion. */
+    #map_sticky {
+        background: var(--bg7) !important;
+    }
+
+    /* 7. Route/Path/POI table header cells (Tipo/Name/Descripción/Acción)
+       only had their background darkened; the site's own header text color
+       is a brownish accent that's illegible against the new dark background. */
+    .routetable th,
+    .areatable th {
+        color: var(--text2) !important;
+    }
+
+    /* 8. The perimeter-editing help text/list also used that same brownish
+       accent color with no background of its own to make it legible. */
+    #locate_help,
+    #locate_help li,
+    #locate_help ol,
+    #locate_help ul {
+        color: var(--text2) !important;
     }
 }
