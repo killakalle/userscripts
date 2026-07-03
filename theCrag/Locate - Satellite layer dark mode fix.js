@@ -8,6 +8,7 @@
 // @icon          https://www.google.com/s2/favicons?domain=thecrag.com
 // @grant         none
 // @run-at        document-idle
+// @license MIT 
 // ==/UserScript==
 
 ;(function () {
