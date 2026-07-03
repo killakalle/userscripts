@@ -8,7 +8,9 @@
 // @icon          https://www.google.com/s2/favicons?domain=thecrag.com
 // @grant         none
 // @run-at        document-idle
-// @license MIT 
+// @license       MIT
+// @downloadURL   https://update.greasyfork.org/scripts/585405/theCrag%20-%20Locate%20-%20Satellite%20layer%20dark%20mode%20fix.user.js
+// @updateURL     https://update.greasyfork.org/scripts/585405/theCrag%20-%20Locate%20-%20Satellite%20layer%20dark%20mode%20fix.meta.js
 // ==/UserScript==
 
 ;(function () {
