@@ -1,7 +1,7 @@
 /* ==UserStyle==
 @namespace    USO Archive
 @author       killakalle
-@version      0.7.12
+@version      0.7.13
 @license      NONE
 @preprocessor uso
 @name         theCrag - Cerulean Tide (modified)
@@ -1700,5 +1700,80 @@ A deep blue theme for theCrag. As a dark theme, images and photos are slightly d
     #locate_help ol,
     #locate_help ul {
         color: var(--text2) !important;
+    }
+
+    /* ==========================================================================
+       Sun Shade Estimation Modal Dark Mode Fixes
+       (this widget's white background/text isn't covered by any rule above,
+       so it stayed a bright white box inside the otherwise-dark modal chrome)
+       ========================================================================== */
+
+    #sun-shade-chart_modal .modal-body {
+        background-color: var(--bg6) !important;
+        color: var(--text2) !important;
+    }
+
+    #sun-shade-chart_modal input[type="date"],
+    #sun-shade-chart_modal input[type="range"] {
+        color-scheme: dark;
+        background-color: var(--bg8) !important;
+        color: var(--text2) !important;
+        border-color: var(--bg4) !important;
+    }
+
+    #sun-shade-chart_modal .sun_times {
+        color: var(--text2) !important;
+    }
+
+    /* The polar chart's circles/degree labels have no explicit color of
+       their own, so they defaulted to near-black on the widget's own white
+       background - invisible once that background goes dark. */
+    #sun-shade-chart_modal .polar_circle {
+        stroke: var(--text3) !important;
+    }
+
+    #sun-shade-chart_modal .polar_circle text {
+        fill: var(--text2) !important;
+    }
+
+    #sun-shade-chart_modal .info-selector {
+        border-color: var(--bg4) !important;
+    }
+
+    #sun-shade-chart_modal .info-selection {
+        background-color: var(--bg8) !important;
+        color: var(--text2) !important;
+        border-color: var(--bg4) !important;
+    }
+
+    #sun-shade-chart_modal .info-selection.info-selected {
+        background-color: var(--bg3) !important;
+        color: var(--text1) !important;
+    }
+
+    #sun-shade-chart_modal #sunshadechart_summary li {
+        color: var(--text2) !important;
+    }
+
+    #sun-shade-chart_modal .sunshadechart_table {
+        background-color: var(--bg6) !important;
+        color: var(--text2) !important;
+    }
+
+    #sun-shade-chart_modal .sunshadechart_table td {
+        border-color: var(--bg4) !important;
+    }
+
+    #sun-shade-chart_modal .markdown {
+        color: var(--text2) !important;
+    }
+
+    /* The sunrise/current-time/sunset labels wrap onto two lines ("06:00"
+       then "AM") because the flex item shrinks below its text's natural
+       width and the space between them becomes a wrap point. */
+    #sun-shade-chart_modal .sun_times .srTime,
+    #sun-shade-chart_modal .sun_times .ssTime,
+    #sun-shade-chart_modal .sun_times .hour-output {
+        white-space: nowrap;
     }
 }
