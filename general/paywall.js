@@ -1,10 +1,11 @@
 // ==UserScript==
 // @name         Archive.is Auto-Submitter
 // @namespace    http://tampermonkey.net/
-// @version      1.2
+// @version      1.3
 // @description  Adds a banner to send paywalled article URLs to archive.is and automatically submits them.
 // @author       You
 // @match        *://*.sueddeutsche.de/*
+// @match        *://*.elpais.com/*
 // @match        *://archive.is/*
 // @grant        none
 // @license      MIT
@@ -17,19 +18,10 @@
     const currentHost = window.location.hostname;
 
     // ==========================================
-    // 1. Logic for the Newspaper (sueddeutsche.de)
+    // Helper: Inject the banner
     // ==========================================
-    if (currentHost.includes('sueddeutsche.de')) {
-
-        // Parse the URL parameters
-        const urlParams = new URLSearchParams(window.location.search);
-
-        // ONLY show the banner if the parameter ?reduced=true is present
-        if (urlParams.get('reduced') !== 'true') {
-            return;
-        }
-
-        // Prevent duplicate banners if the script runs multiple times
+    function injectBanner(message) {
+        // Prevent duplicate banners
         if (document.getElementById('archive-banner-xyz')) return;
 
         // Create the banner container
@@ -63,7 +55,7 @@
         });
 
         // Assemble the banner and inject it at the very top of the body
-        banner.appendChild(document.createTextNode('Archive this paywalled article?'));
+        banner.appendChild(document.createTextNode(message));
         banner.appendChild(btn);
 
         // Ensure the body exists before inserting
@@ -73,7 +65,47 @@
     }
 
     // ==========================================
-    // 2. Logic for archive.is
+    // 1. Logic for sueddeutsche.de
+    // ==========================================
+    if (currentHost.includes('sueddeutsche.de')) {
+        const urlParams = new URLSearchParams(window.location.search);
+        
+        // ONLY show the banner if the parameter ?reduced=true is present
+        if (urlParams.get('reduced') === 'true') {
+            injectBanner('Archive this paywalled article?');
+        }
+    }
+
+    // ==========================================
+    // 2. Logic for elpais.com
+    // ==========================================
+    if (currentHost.includes('elpais.com')) {
+        // Function to check for the paywall ID
+        const checkForElPaisPaywall = () => {
+            if (document.getElementById('ctn_freemium_article')) {
+                injectBanner('Archive this paywalled El País article?');
+                return true; // Found it
+            }
+            return false;
+        };
+
+        // Check immediately in case the paywall rendered server-side
+        if (!checkForElPaisPaywall()) {
+            // If not found yet, observe the DOM in case it is loaded via JS
+            const observer = new MutationObserver((mutations, obs) => {
+                if (checkForElPaisPaywall()) {
+                    obs.disconnect(); // Stop observing once found to save memory
+                }
+            });
+            
+            if (document.body) {
+                observer.observe(document.body, { childList: true, subtree: true });
+            }
+        }
+    }
+
+    // ==========================================
+    // 3. Logic for archive.is
     // ==========================================
     if (currentHost.includes('archive.is')) {
         // Check if we arrived here via our custom redirect button
@@ -81,7 +113,7 @@
         const urlToArchive = urlParams.get('auto_archive');
 
         if (urlToArchive) {
-            // Find the form and input fields using the HTML structure you provided
+            // Find the form and input fields using the HTML structure
             const form = document.getElementById('submiturl');
             const urlInput = document.getElementById('url');
 
