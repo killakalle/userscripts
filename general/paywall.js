@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Archive.is Auto-Submitter
 // @namespace    http://tampermonkey.net/
-// @version      1.3
+// @version      1.4
 // @description  Adds a banner to send paywalled article URLs to archive.is and automatically submits them.
 // @author       You
 // @match        *://*.sueddeutsche.de/*
@@ -69,7 +69,7 @@
     // ==========================================
     if (currentHost.includes('sueddeutsche.de')) {
         const urlParams = new URLSearchParams(window.location.search);
-        
+
         // ONLY show the banner if the parameter ?reduced=true is present
         if (urlParams.get('reduced') === 'true') {
             injectBanner('Archive this paywalled article?');
@@ -97,7 +97,7 @@
                     obs.disconnect(); // Stop observing once found to save memory
                 }
             });
-            
+
             if (document.body) {
                 observer.observe(document.body, { childList: true, subtree: true });
             }
@@ -108,6 +108,31 @@
     // 3. Logic for archive.is
     // ==========================================
     if (currentHost.includes('archive.is')) {
+        
+        // --- Extension: Auto-close "Already Archived" Modal ---
+        const closeAlreadyArchivedModal = () => {
+            const closeBtn = document.getElementById('ALREADY_CLOSEBTN');
+            if (closeBtn) {
+                closeBtn.click();
+                return true;
+            }
+            return false;
+        };
+
+        // Check immediately and also observe the DOM in case it pops up asynchronously
+        if (!closeAlreadyArchivedModal()) {
+            const modalObserver = new MutationObserver((mutations, obs) => {
+                if (closeAlreadyArchivedModal()) {
+                    obs.disconnect(); // Stop observing once closed
+                }
+            });
+
+            if (document.body) {
+                modalObserver.observe(document.body, { childList: true, subtree: true });
+            }
+        }
+        // ------------------------------------------------------
+
         // Check if we arrived here via our custom redirect button
         const urlParams = new URLSearchParams(window.location.search);
         const urlToArchive = urlParams.get('auto_archive');
