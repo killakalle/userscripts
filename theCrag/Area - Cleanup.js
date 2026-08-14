@@ -1,8 +1,8 @@
 // ==UserScript==
 // @name         theCrag – Area - Cleanup
 // @namespace    https://github.com/killakalle/userscripts
-// @version      1.2.10
-// @description  Hide unneeded sections, internal tags, and auto-expand descriptions on crag/area overview pages
+// @version      1.2.11
+// @description  Hide unneeded sections, internal tags, auto-expand descriptions on crag/area overview pages, and definitively fix mobile overflow
 // @author       killakalle
 // @match        https://www.thecrag.com/es/escalar/*
 // @match        https://www.thecrag.com/en/climbing/*
@@ -29,7 +29,8 @@
     hideInternalTags: true,
     hideUntickedIcons: true,
     hideSportTag: true,
-    addHtmlGuideLink: true // <--- New Toggle
+    addHtmlGuideLink: true,
+    fixMobileOverflow: true
   }
 
   /* ==================== HELPERS ==================== */
@@ -42,12 +43,73 @@
     return Array.prototype.slice.call((root || document).querySelectorAll(sel))
   }
 
+  /* ==================== FIX MOBILE OVERFLOW ==================== */
+
+  function fixMobileOverflow () {
+    if (!CONFIG.fixMobileOverflow) return
+
+    if ($('#custom-overflow-fix')) return
+
+    const style = document.createElement('style')
+    style.id = 'custom-overflow-fix'
+    style.textContent = `
+      /* 1. Prevent root level horizontal scrolling */
+      html, body {
+        max-width: 100vw !important;
+        overflow-x: hidden !important;
+      }
+
+      /* 2. Constrain the route containers */
+      .route, .topo-row {
+        max-width: 100vw !important;
+        box-sizing: border-box !important;
+      }
+
+      /* 3. Convert margin to padding on the description container so
+            it doesn't push its 100% width out of bounds */
+      .route .markdown.desc {
+        margin-left: 0 !important;
+        margin-right: 0 !important;
+        padding-left: 20px !important; /* Keeps the visual indent */
+        padding-right: 8px !important;
+        width: 100% !important;
+        max-width: 100% !important;
+        box-sizing: border-box !important;
+      }
+
+      /* 4. Aggressive wrap on the text elements inside */
+      .route .markdown.desc p,
+      .route .markdown.desc div {
+        width: 100% !important;
+        max-width: 100% !important;
+        margin-left: 0 !important;
+        margin-right: 0 !important;
+        box-sizing: border-box !important;
+        white-space: normal !important;
+        overflow-wrap: anywhere !important;
+        word-break: break-word !important;
+      }
+
+      /* 5. Keep the equip/bolter info constrained */
+      .route .text-right,
+      .route [style*="float: right"],
+      .route [style*="text-align: right"] {
+        float: none !important;
+        display: block !important;
+        text-align: right !important;
+        width: 100% !important;
+        padding-right: 15px !important;
+        box-sizing: border-box !important;
+      }
+    `
+    document.head.appendChild(style)
+  }
+
   /* ==================== ADD HTML GUIDE LINK ==================== */
 
   function addHtmlGuideLink () {
     if (!CONFIG.addHtmlGuideLink) return
 
-    // Avoid adding multiple links if init runs twice
     if ($('.custom-html-guide-link')) return
 
     const elements = $all('.info.iblock')
@@ -56,7 +118,7 @@
       a.textContent = 'HTML Guide'
       a.href = window.location.href.replace(/\/$/, '') + '/guide'
       a.className = 'custom-html-guide-link'
-      a.style.marginLeft = '10px' // Slight spacing
+      a.style.marginLeft = '10px'
       el.appendChild(a)
     })
   }
@@ -87,12 +149,10 @@
   /* ==================== HIDE SPECIFIC SPORT TAGS ==================== */
 
   function hideSportTags () {
-    // Selects spans that have both 'tags' and 'sport' classes
     const sportTags = $all('span.tags.sport')
 
     sportTags.forEach(tag => {
       const text = tag.textContent.trim()
-      // Specifically targets "Deportiva" or "Sport" to avoid over-matching
       if (text === 'Deportiva' || text === 'Sport') {
         tag.remove()
       }
@@ -204,6 +264,7 @@
   /* ==================== RUN ==================== */
 
   function init () {
+    fixMobileOverflow()
     hideInternalTags()
     hideSportTags()
     removePlanYourTrip()
