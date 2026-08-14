@@ -1,7 +1,7 @@
 /* ==UserStyle==
 @namespace    USO Archive
 @author       killakalle
-@version      0.7.13
+@version      0.7.18
 @license      NONE
 @preprocessor uso
 @name         theCrag - Cerulean Tide (modified)
@@ -1713,6 +1713,13 @@ A deep blue theme for theCrag. As a dark theme, images and photos are slightly d
         color: var(--text2) !important;
     }
 
+    /* theCrag's own widget CSS sets an explicit opaque white background on
+       this inner container (a child of .modal-body), which paints over the
+       dark background above regardless of what the ancestor is doing. */
+    #sun-shade-chart_modal .sun-shade-chart {
+        background-color: var(--bg6) !important;
+    }
+
     #sun-shade-chart_modal input[type="date"],
     #sun-shade-chart_modal input[type="range"] {
         color-scheme: dark;
@@ -1751,8 +1758,19 @@ A deep blue theme for theCrag. As a dark theme, images and photos are slightly d
         color: var(--text1) !important;
     }
 
+    /* The "Soleado" marker's background is the site's raw --color-sunny
+       (#ffe200) at full saturation/brightness, which is glaring against
+       the dark theme. Dim it to a muted gold and switch to a dark label
+       so it stays readable. Scoped to the marker only, not --color-sunny
+       itself, since that variable also drives the compass arc/sun dots. */
+    #sun-shade-chart_modal #sunshadechart_summary li.sunny .marker {
+        background-color: #a8890a !important;
+        color: var(--bg9) !important;
+    }
+
     #sun-shade-chart_modal #sunshadechart_summary li {
         color: var(--text2) !important;
+        white-space: nowrap;
     }
 
     #sun-shade-chart_modal .sunshadechart_table {
@@ -1760,11 +1778,26 @@ A deep blue theme for theCrag. As a dark theme, images and photos are slightly d
         color: var(--text2) !important;
     }
 
+    /* theCrag's own table CSS sets an explicit light-gray background on td
+       (and a slightly different one on even rows), overriding whatever
+       background the table itself has - fill those in directly too. */
     #sun-shade-chart_modal .sunshadechart_table td {
+        background: var(--bg8) !important;
         border-color: var(--bg4) !important;
     }
 
+    #sun-shade-chart_modal .sunshadechart_table tr:nth-child(even) td {
+        background: var(--bg7) !important;
+    }
+
     #sun-shade-chart_modal .markdown {
+        color: var(--text2) !important;
+    }
+
+    /* theCrag's own CSS sets an explicit color directly on these two
+       classes, which beats the inherited color from .sun_times above. */
+    #sun-shade-chart_modal .sun_times .srTime,
+    #sun-shade-chart_modal .sun_times .ssTime {
         color: var(--text2) !important;
     }
 
