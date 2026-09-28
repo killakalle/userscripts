@@ -1,7 +1,7 @@
 /* ==UserStyle==
 @namespace    USO Archive
 @author       killakalle
-@version      0.7.19
+@version      0.7.20
 @license      NONE
 @preprocessor uso
 @name         theCrag - Cerulean Tide (modified)
@@ -1421,23 +1421,39 @@ A deep blue theme for theCrag. As a dark theme, images and photos are slightly d
         }
     }
 
-    /* 3. Desktop View Only: Float equipment to the right when there is plenty of room */
+    /* 3. Desktop View Only: equipment in its own right-hand grid column, text wraps beside it.
+       Selectors must out-rank "Area - Cleanup" (.route .markdown.desc div { width: 100% }). */
     @media only screen and (min-width: 768px) {
 
-        .node-listview .desc.multi.short,
-        .node-listview .desc.brief {
-            position: relative !important;
+        .node-listview .route .desc.multi.short,
+        .node-listview .route .desc.brief {
+            display: grid !important;
+            grid-template-columns: minmax(50%, 1fr) auto !important;
+            /* Trailing 1fr row absorbs the equipment block's height so paragraphs don't get spread apart */
+            grid-template-rows: repeat(9, auto) 1fr !important;
+            column-gap: 16px !important;
+            align-items: start !important;
             padding-right: 95px !important;
             /* Keeps the clean lane open for grades */
+            column-rule: none !important;
+            /* Chrome paints column-rule into grid gaps */
         }
 
-        .node-listview .route-history.hist {
-            position: absolute !important;
-            top: 0 !important;
-            right: 95px !important;
-            /* Snaps perfectly beside the grade lane */
+        .node-listview .route .desc.multi.short>*,
+        .node-listview .route .desc.brief>* {
+            grid-column: 1 !important;
+        }
+
+        .node-listview .route .desc.brief>:not(.route-history) {
+            border-right: none !important;
+        }
+
+        .node-listview .route .desc .route-history.hist {
+            grid-column: 2 !important;
+            grid-row: 1 / -1 !important;
+            position: static !important;
+            width: auto !important;
             text-align: right !important;
-            white-space: nowrap !important;
             margin: 0 !important;
         }
     }
