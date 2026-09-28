@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         theCrag - Profile - Show CPR summary
 // @namespace    https://github.com/killakalle/userscripts
-// @version      0.3.0
+// @version      0.3.1
 // @description  Shows current Sport CPR (grade, points and trend) as a prominent badge below the avatar on a climber's profile page
 // @author       killakalle
 // @match        https://www.thecrag.com/climber/*
@@ -139,9 +139,16 @@
     // The avatar is positioned absolutely, so it (and profiles without a
     // webcover in particular) can leave little or no real space below it in
     // the container's own flow height. Rather than only placing the badge
-    // there when space already happens to exist, grow the container to
-    // guarantee room, pushing whatever comes after it (the discipline band)
-    // down instead of letting the badge overlap it.
+    // there when space already happens to exist, guarantee room by adding
+    // padding-top to the container: this pushes the text column (name,
+    // username, stats, ...) down so its own bottom edge lands level with
+    // the badge's bottom, instead of leaving a lopsided gap that only the
+    // badge occupies. Padding-top is used instead of a margin on the first
+    // child because margins on a first child can collapse with the
+    // container's own box in ways that don't reliably grow its height;
+    // padding never collapses, and top/left on the (absolutely positioned)
+    // avatar and badge are measured from the padding edge, so they aren't
+    // affected by this padding change.
     const gap = 8
     const bottomPadding = 8
     const naturalHeight = container.offsetHeight
@@ -153,8 +160,11 @@
     container.appendChild(badge)
 
     const neededHeight = top + badge.offsetHeight + bottomPadding
-    if (neededHeight > naturalHeight) {
-      container.style.minHeight = neededHeight + 'px'
+    const shortfall = neededHeight - naturalHeight
+
+    if (shortfall > 0) {
+      const currentPaddingTop = parseFloat(getComputedStyle(container).paddingTop) || 0
+      container.style.paddingTop = (currentPaddingTop + shortfall) + 'px'
     }
   }
 
