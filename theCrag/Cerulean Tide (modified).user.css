@@ -1,7 +1,7 @@
 /* ==UserStyle==
 @namespace    USO Archive
 @author       killakalle
-@version      0.7.18
+@version      0.7.19
 @license      NONE
 @preprocessor uso
 @name         theCrag - Cerulean Tide (modified)
@@ -1019,6 +1019,15 @@ A deep blue theme for theCrag. As a dark theme, images and photos are slightly d
 
     img {
         filter: var(--darken-img);
+    }
+
+    /* The site logo is swapped for a light-text variant by the companion
+       "Header - Cerulean Tide logo fix" userscript so it reads on the dark
+       header; darkening/desaturating it here would defeat that. Needs
+       !important: a.iblock.ablock>img (brightness(0.6), below) is more
+       specific and would otherwise win. */
+    .bust__logo img {
+        filter: none !important;
     }
 
     .bg-brand-blue-pale {
