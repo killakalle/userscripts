@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         theCrag - Profile - Show CPR summary
 // @namespace    https://github.com/killakalle/userscripts
-// @version      0.2.2
+// @version      0.3.0
 // @description  Shows current Sport CPR (grade, points and trend) as a prominent badge below the avatar on a climber's profile page
 // @author       killakalle
 // @match        https://www.thecrag.com/climber/*
@@ -73,8 +73,6 @@
         line-height: 1.15;
         font-family: inherit;
         z-index: 5;
-      }
-      .cpr-badge--overlay {
         position: absolute;
       }
       .cpr-badge--inline {
@@ -122,72 +120,41 @@
     return badge
   }
 
-  // Layout wrappers on this page reserve a left "gutter" for the absolutely
-  // positioned avatar via padding, so their own bounding boxes span the full
-  // row width even where nothing is actually painted. A plain rect-overlap
-  // check against those boxes would therefore always report a collision, so
-  // instead we probe actual painted content at sample points with
-  // elementFromPoint and only treat a real content element as an obstacle.
-  const WRAPPER_SELECTOR = '.headline__avatar, .headline--avatar, .headline__stats, .headline__guts, ul.stats, .profile__summary, .clearfix'
-
-  function spaceBelowAvatarIsEmpty (avatar, left, top, width, height) {
-    const cols = 3
-    const rows = 3
-
-    for (let r = 0; r < rows; r++) {
-      for (let c = 0; c < cols; c++) {
-        const px = left + (width * (c + 0.5)) / cols
-        const py = top + (height * (r + 0.5)) / rows
-        const hit = document.elementFromPoint(px, py)
-
-        if (!hit || hit === document.body) continue
-        if (hit === avatar || avatar.contains(hit)) continue
-        if (hit.matches(WRAPPER_SELECTOR)) continue
-
-        return false
-      }
-    }
-
-    return true
-  }
-
   function placeBadge (badge) {
     const avatar = document.querySelector('.headline__avatar')
     const container = avatar ? avatar.offsetParent : null
 
-    if (avatar && container) {
-      badge.classList.add('cpr-badge--overlay')
-      badge.style.top = (avatar.offsetTop + avatar.offsetHeight + 8) + 'px'
-      badge.style.left = avatar.offsetLeft + 'px'
-      badge.style.width = avatar.offsetWidth + 'px'
-      badge.style.visibility = 'hidden'
-      container.appendChild(badge)
-
-      // Measure the badge's real rendered height (font rendering varies by
-      // OS/browser) instead of guessing, then probe with that exact size.
-      const badgeRect = badge.getBoundingClientRect()
-      const fits = spaceBelowAvatarIsEmpty(avatar, badgeRect.left, badgeRect.top, badgeRect.width, badgeRect.height)
-
-      if (fits) {
-        badge.style.visibility = ''
-        return
+    if (!avatar || !container || container === document.body || container === document.documentElement) {
+      badge.classList.add('cpr-badge--inline')
+      const guts = document.querySelector('.headline__guts')
+      const heading = document.querySelector('.heading.h1')
+      if (guts) {
+        guts.insertBefore(badge, guts.firstChild)
+      } else if (heading) {
+        heading.insertAdjacentElement('afterend', badge)
       }
-
-      container.removeChild(badge)
-      badge.classList.remove('cpr-badge--overlay')
-      badge.style.top = ''
-      badge.style.left = ''
-      badge.style.width = ''
-      badge.style.visibility = ''
+      return
     }
 
-    badge.classList.add('cpr-badge--inline')
-    const guts = document.querySelector('.headline__guts')
-    const heading = document.querySelector('.heading.h1')
-    if (guts) {
-      guts.insertBefore(badge, guts.firstChild)
-    } else if (heading) {
-      heading.insertAdjacentElement('afterend', badge)
+    // The avatar is positioned absolutely, so it (and profiles without a
+    // webcover in particular) can leave little or no real space below it in
+    // the container's own flow height. Rather than only placing the badge
+    // there when space already happens to exist, grow the container to
+    // guarantee room, pushing whatever comes after it (the discipline band)
+    // down instead of letting the badge overlap it.
+    const gap = 8
+    const bottomPadding = 8
+    const naturalHeight = container.offsetHeight
+
+    const top = avatar.offsetTop + avatar.offsetHeight + gap
+    badge.style.top = top + 'px'
+    badge.style.left = avatar.offsetLeft + 'px'
+    badge.style.width = avatar.offsetWidth + 'px'
+    container.appendChild(badge)
+
+    const neededHeight = top + badge.offsetHeight + bottomPadding
+    if (neededHeight > naturalHeight) {
+      container.style.minHeight = neededHeight + 'px'
     }
   }
 
