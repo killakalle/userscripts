@@ -2,7 +2,7 @@
 // @name         theCrag - Ascent list - Cleanup
 // @namespace    https://github.com/killakalle/userscripts
 // @author       killakalle
-// @version      0.5.3
+// @version      0.6.0
 // @description  Hides the search facet and pagination on the ascent list, removes certain rows from the search results table, adds the ascent date per row, and adds a button to toggle beta ascents.
 // @match        *://www.thecrag.com/*/ascents*
 // @icon         https://www.google.com/s2/favicons?domain=thecrag.com
@@ -70,11 +70,6 @@
     if (theadRow) {
       table.style.tableLayout = 'fixed'
       table.style.width = '100%'
-      // Fixed layout gives auto-width columns whatever is left over; on narrow
-      // (mobile) viewports that is ~0, so cells wrap one character per line and
-      // rows grow enormously tall. A min-width keeps every column usable and
-      // lets the page scroll horizontally instead.
-      table.style.minWidth = '1000px'
 
       if (theadRow.cells[3]) theadRow.cells[3].style.display = 'none'
 
@@ -192,6 +187,63 @@
         })
       }
     })
+
+    // D. Mobile layout: stack each ascent as a card instead of a wide table,
+    // so the list never needs horizontal scrolling. Cell order after the
+    // changes above: 1 tick, 2 grade, 3 route (hidden on route pages),
+    // 4 hidden, 5 comments, 6 quality, 7 climber, 8 actions, 9 date.
+    const style = document.createElement('style')
+    style.textContent = `
+      @media only screen and (max-width: 767px) {
+        table.facet-results[data-actiontype="ascent"] {
+          display: block !important;
+          width: 100% !important;
+          table-layout: auto !important;
+        }
+        table.facet-results[data-actiontype="ascent"] thead {
+          display: none !important;
+        }
+        table.facet-results[data-actiontype="ascent"] tbody {
+          display: block !important;
+          width: 100% !important;
+        }
+        table.facet-results[data-actiontype="ascent"] tbody tr {
+          display: grid !important;
+          grid-template-columns: auto auto minmax(0, 1fr) auto auto;
+          grid-template-areas:
+            "tick grade climber date actions"
+            "route route route route route"
+            "quality quality quality quality quality"
+            "comment comment comment comment comment";
+          column-gap: 8px;
+          align-items: start;
+          padding: 6px 4px;
+          border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+        }
+        table.facet-results[data-actiontype="ascent"] tbody tr > td {
+          width: auto !important;
+          min-width: 0;
+          padding: 2px 0 !important;
+          border: 0 !important;
+          box-sizing: border-box;
+        }
+        table.facet-results[data-actiontype="ascent"] tbody tr > td:nth-child(1) { grid-area: tick; }
+        table.facet-results[data-actiontype="ascent"] tbody tr > td:nth-child(2) { grid-area: grade; }
+        table.facet-results[data-actiontype="ascent"] tbody tr > td:nth-child(3) { grid-area: route; }
+        table.facet-results[data-actiontype="ascent"] tbody tr > td:nth-child(5) { grid-area: comment; }
+        table.facet-results[data-actiontype="ascent"] tbody tr > td:nth-child(6) { grid-area: quality; }
+        table.facet-results[data-actiontype="ascent"] tbody tr > td:nth-child(7) { grid-area: climber; align-self: center; }
+        table.facet-results[data-actiontype="ascent"] tbody tr > td:nth-child(8) { grid-area: actions; }
+        table.facet-results[data-actiontype="ascent"] tbody tr > td:nth-child(9) { grid-area: date; text-align: right; }
+        table.facet-results[data-actiontype="ascent"] tbody tr > td.comment-cell {
+          padding-top: 4px !important;
+        }
+        table.facet-results[data-actiontype="ascent"] tbody tr > td.comment-cell:empty {
+          display: none !important;
+        }
+      }
+    `
+    document.head.appendChild(style)
   }
 
   // 3. Beta Toggle Button
