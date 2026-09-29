@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         theCrag – Route - Cleanup
 // @namespace    https://github.com/killakalle/userscripts
-// @version      1.7.2
+// @version      1.7.4
 // @description  Hide unneeded sections on route detail pages
 // @author       killakalle
 // @match        https://www.thecrag.com/es/escalar/*/route/*
@@ -583,6 +583,34 @@
           background: rgba(255, 255, 255, 0.1); /* Subtle visibility */
           border-radius: 4px;
           line-height: 1;
+        }
+
+        /* Ascent links: pill matching the .ai-tag height (18px).
+           An invisible ::after extends the tap target beyond the pill. */
+        .headline__guts ul.stats a[href$="/ascents"],
+        .headline__guts ul.stats a[href*="/ascents/by/"] {
+          position: relative;
+          display: inline-block;
+          box-sizing: border-box;
+          height: 18px;
+          line-height: 16px;
+          padding: 0 8px;
+          margin: 0 2px;
+          font-weight: 700;
+          vertical-align: middle;
+          border-radius: 10px;
+          background: rgba(127, 127, 127, 0.15);
+          border: 1px solid rgba(127, 127, 127, 0.35);
+          touch-action: manipulation;
+        }
+        .headline__guts ul.stats a[href$="/ascents"]::after,
+        .headline__guts ul.stats a[href*="/ascents/by/"]::after {
+          content: '';
+          position: absolute;
+          top: -9px;
+          bottom: -9px;
+          left: -6px;
+          right: -6px;
         }
 
         /* Adjust the actual list so it doesn't overlap text if possible */
