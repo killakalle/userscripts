@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         theCrag – Area - Cleanup
 // @namespace    https://github.com/killakalle/userscripts
-// @version      1.2.11
+// @version      1.2.12
 // @description  Hide unneeded sections, internal tags, auto-expand descriptions on crag/area overview pages, and definitively fix mobile overflow
 // @author       killakalle
 // @match        https://www.thecrag.com/es/escalar/*
@@ -12,8 +12,8 @@
 // @grant        none
 // @license      MIT
 // @icon         https://www.google.com/s2/favicons?domain=thecrag.com
-// @downloadURL  https://greasyfork.org/en/scripts/568094-thecrag-area-crag-page-cleanup
-// @updateURL    https://greasyfork.org/en/scripts/568094-thecrag-area-crag-page-cleanup
+// @downloadURL      https://update.greasyfork.org/scripts/568094/theCrag%20%E2%80%93%20Area%20-%20Cleanup.user.js
+// @updateURL      https://update.greasyfork.org/scripts/568094/theCrag%20%E2%80%93%20Area%20-%20Cleanup.meta.js
 // ==/UserScript==
 
 ;(function () {

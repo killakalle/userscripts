@@ -2,13 +2,15 @@
 // @name          theCrag - Sun Shade chart - 24h time format
 // @author        killakalle
 // @namespace     https://github.com/killakalle/userscripts
-// @version       0.1.0
+// @version       0.1.1
 // @description   Rewrites the Sun Shade Estimation modal's 12-hour "HH:MM AM/PM" times to 24-hour "HH:MM", dropping the AM/PM suffix entirely. The modal's slider output, summary list and detail table are all re-rendered by the site's own JS on every interaction, so this keeps a MutationObserver on the modal and re-applies the conversion after each change.
 // @match         *://www.thecrag.com/*
 // @icon          https://www.google.com/s2/favicons?domain=thecrag.com
 // @grant         none
 // @run-at        document-idle
 // @license       MIT
+// @downloadURL       https://update.greasyfork.org/scripts/597931/theCrag%20-%20Sun%20Shade%20chart%20-%2024h%20time%20format.user.js
+// @updateURL       https://update.greasyfork.org/scripts/597931/theCrag%20-%20Sun%20Shade%20chart%20-%2024h%20time%20format.meta.js
 // ==/UserScript==
 
 ;(function () {

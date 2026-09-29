@@ -2,13 +2,15 @@
 // @name          theCrag - Header - Cerulean Tide logo fix
 // @author        killakalle
 // @namespace     https://github.com/killakalle/userscripts
-// @version       0.1.0
+// @version       0.1.1
 // @description   Companion to the Cerulean Tide dark userstyle: the site logo's "the Crag" wordmark is solid black with no dark-mode variant, so it's nearly invisible on the theme's dark navy header. This swaps the header logo for a light-grey-text version (same icon/geometry, just recolored to match the theme's --text2 nav color) so it stays readable without glaring.
 // @match         *://www.thecrag.com/*
 // @icon          https://www.google.com/s2/favicons?domain=thecrag.com
 // @grant         none
 // @run-at        document-idle
 // @license       MIT
+// @downloadURL       https://update.greasyfork.org/scripts/597930/theCrag%20-%20Header%20-%20Cerulean%20Tide%20logo%20fix.user.js
+// @updateURL       https://update.greasyfork.org/scripts/597930/theCrag%20-%20Header%20-%20Cerulean%20Tide%20logo%20fix.meta.js
 // ==/UserScript==
 
 ;(function () {
