@@ -2,7 +2,7 @@
 // @name         theCrag - Ascent list - Cleanup
 // @namespace    https://github.com/killakalle/userscripts
 // @author       killakalle
-// @version      0.5.2
+// @version      0.5.3
 // @description  Hides the search facet and pagination on the ascent list, removes certain rows from the search results table, adds the ascent date per row, and adds a button to toggle beta ascents.
 // @match        *://www.thecrag.com/*/ascents*
 // @icon         https://www.google.com/s2/favicons?domain=thecrag.com
@@ -70,6 +70,11 @@
     if (theadRow) {
       table.style.tableLayout = 'fixed'
       table.style.width = '100%'
+      // Fixed layout gives auto-width columns whatever is left over; on narrow
+      // (mobile) viewports that is ~0, so cells wrap one character per line and
+      // rows grow enormously tall. A min-width keeps every column usable and
+      // lets the page scroll horizontally instead.
+      table.style.minWidth = '1000px'
 
       if (theadRow.cells[3]) theadRow.cells[3].style.display = 'none'
 
@@ -77,6 +82,7 @@
       if (theadRow.cells[1]) theadRow.cells[1].style.width = '55px'
       if (theadRow.cells[5]) theadRow.cells[5].style.width = '125px'
       if (theadRow.cells[6]) theadRow.cells[6].style.width = '120px'
+      if (theadRow.cells[7]) theadRow.cells[7].style.width = '90px'
 
       const viaHeader = theadRow.cells[2]
       const commentHeader = document.getElementById('added-comment-header')
@@ -85,8 +91,10 @@
         if (viaHeader) viaHeader.style.display = 'none'
         if (commentHeader) commentHeader.style.width = 'auto'
       } else {
-        if (viaHeader) viaHeader.style.width = '22%'
-        if (commentHeader) commentHeader.style.width = '44%'
+        if (viaHeader) viaHeader.style.width = '20%'
+        // Auto width: the comment column absorbs the remaining space, so the
+        // fixed-width columns never get squeezed
+        if (commentHeader) commentHeader.style.width = 'auto'
       }
     }
 
