@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         theCrag - Profile - Show CPR summary
 // @namespace    https://github.com/killakalle/userscripts
-// @version      0.3.1
+// @version      0.3.2
 // @description  Shows current Sport CPR (grade, points and trend) as a prominent badge below the avatar on a climber's profile page
 // @author       killakalle
 // @match        https://www.thecrag.com/climber/*
@@ -9,6 +9,8 @@
 // @grant        none
 // @license      MIT
 // @run-at       document-idle
+// @downloadURL      https://update.greasyfork.org/scripts/597929/theCrag%20-%20Profile%20-%20Show%20CPR%20summary.user.js
+// @updateURL      https://update.greasyfork.org/scripts/597929/theCrag%20-%20Profile%20-%20Show%20CPR%20summary.meta.js
 // ==/UserScript==
 
 ;(function () {

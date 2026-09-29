@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Archive.is Auto-Submitter
 // @namespace    http://tampermonkey.net/
-// @version      1.4
+// @version      1.5
 // @description  Adds a banner to send paywalled article URLs to archive.is and automatically submits them.
 // @author       You
 // @match        *://*.sueddeutsche.de/*
@@ -9,6 +9,8 @@
 // @match        *://archive.is/*
 // @grant        none
 // @license      MIT
+// @downloadURL      https://update.greasyfork.org/scripts/589039/Archive.is%20Auto-Submitter.user.js
+// @updateURL      https://update.greasyfork.org/scripts/589039/Archive.is%20Auto-Submitter.meta.js
 // ==/UserScript==
 
 (function() {
