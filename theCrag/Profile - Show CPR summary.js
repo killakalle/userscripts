@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         theCrag - Profile - Show CPR summary
 // @namespace    https://github.com/killakalle/userscripts
-// @version      0.3.2
+// @version      0.3.3
 // @description  Shows current Sport CPR (grade, points and trend) as a prominent badge below the avatar on a climber's profile page
 // @author       killakalle
 // @match        https://www.thecrag.com/climber/*
@@ -158,8 +158,27 @@
     const top = avatar.offsetTop + avatar.offsetHeight + gap
     badge.style.top = top + 'px'
     badge.style.left = avatar.offsetLeft + 'px'
-    badge.style.width = avatar.offsetWidth + 'px'
+    badge.style.minWidth = avatar.offsetWidth + 'px'
     container.appendChild(badge)
+
+    // On narrow screens the name is stacked below the avatar instead of
+    // beside it, so the space under the avatar is occupied by the heading
+    // itself and the container's natural height is no indicator of free
+    // room. Push the heading (and everything after it) below the badge.
+    const heading = document.querySelector('.heading.h1')
+    if (heading) {
+      const headingStyle = getComputedStyle(heading)
+      const headingTextLeft = heading.offsetLeft + (parseFloat(headingStyle.paddingLeft) || 0)
+      const avatarRight = avatar.offsetLeft + avatar.offsetWidth
+
+      if (headingTextLeft < avatarRight) {
+        const delta = (top + badge.offsetHeight + gap) - heading.offsetTop
+        if (delta > 0) {
+          heading.style.paddingTop = ((parseFloat(headingStyle.paddingTop) || 0) + delta) + 'px'
+        }
+        return
+      }
+    }
 
     const neededHeight = top + badge.offsetHeight + bottomPadding
     const shortfall = neededHeight - naturalHeight
