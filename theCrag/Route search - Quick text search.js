@@ -2,8 +2,8 @@
 // @name         theCrag - Route search - Quick text search
 // @namespace    https://github.com/killakalle/userscripts
 // @author       killakalle
-// @version      0.1.0
-// @description  Adds an always-visible route name search box with its own submit button right below the page title on route lists (…/routes), so you no longer need to open the "Text search" filter first or scroll down to "Apply filters" on mobile.
+// @version      0.2.0
+// @description  Adds an always-visible route name search box with its own submit button right below the page title on route lists (…/routes), so you no longer need to open the "Text search" filter first or scroll down to "Apply filters" on mobile. The other search scopes and filters are collapsed behind a "Filters" toggle.
 // @match        https://www.thecrag.com/*/routes*
 // @icon         https://www.google.com/s2/favicons?domain=thecrag.com
 // @grant        none
@@ -24,8 +24,14 @@
   const lang = document.documentElement.lang || 'en'
   const t =
     lang.startsWith('es')
-      ? { placeholder: 'Nombre de vía', button: 'Buscar' }
-      : { placeholder: 'Route name', button: 'Search' }
+      ? { placeholder: 'Nombre de vía', button: 'Buscar', filters: 'Filtros' }
+      : { placeholder: 'Route name', button: 'Search', filters: 'Filters' }
+
+  // "Buscando en:" scope tabs sit right before the filter form
+  const scope = form.previousElementSibling
+  if (scope && scope.tagName === 'DIV' && scope.querySelector('a')) {
+    scope.classList.add('qs-scope')
+  }
 
   const style = document.createElement('style')
   style.textContent = `
@@ -52,8 +58,19 @@
       padding: 8px 16px;
       font-size: 16px;
     }
+    #qs-bar .qs-toggle {
+      padding: 8px 10px;
+      white-space: nowrap;
+    }
+    #qs-bar .qs-toggle .caret {
+      margin-left: 4px;
+      vertical-align: middle;
+    }
     /* Our bar replaces the original text-search facet */
     form#facets .facet[data-comp="search"] { display: none !important; }
+    /* Scope tabs + filter form collapsed by default */
+    html.qs-filters-hidden form#facets,
+    html.qs-filters-hidden .qs-scope { display: none !important; }
     @media (max-width: 767px) {
       #qs-bar { max-width: none; margin: 8px 8px 12px; }
     }
@@ -80,7 +97,28 @@
   button.className = 'btn btn-primary'
   button.textContent = t.button
 
-  bar.append(input, button)
+  const toggle = document.createElement('button')
+  toggle.type = 'button'
+  toggle.className = 'btn qs-toggle'
+  toggle.innerHTML = `<i class="icon-filter"></i> ${t.filters}<span class="caret"></span>`
+
+  // Hidden by default, but start expanded when other filters are already
+  // active: facets.js only reads :visible inputs, so a hidden panel would
+  // silently drop them on the next search.
+  const otherFiltersActive = [...form.querySelectorAll('.facet.open')].some(
+    f => f !== facet
+  )
+  const setFiltersHidden = hidden => {
+    document.documentElement.classList.toggle('qs-filters-hidden', hidden)
+    toggle.setAttribute('aria-expanded', String(!hidden))
+    toggle.classList.toggle('active', !hidden)
+  }
+  setFiltersHidden(!otherFiltersActive)
+  toggle.addEventListener('click', () => {
+    setFiltersHidden(!document.documentElement.classList.contains('qs-filters-hidden'))
+  })
+
+  bar.append(input, button, toggle)
   headline.insertAdjacentElement('afterend', bar)
 
   // theCrag's facets.js builds the result URL in the global getFacetUrl(),
