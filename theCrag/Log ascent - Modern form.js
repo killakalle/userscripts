@@ -3,7 +3,7 @@
 // @namespace    https://github.com/killakalle/userscripts
 // @author       killakalle
 // @version      0.1.0
-// @description  Replaces the clunky "Registrar ascensión" modal with a compact two-column layout (one column on phones): colour-coded tick tiles, theCrag's own icons, auto-growing comment boxes, attempts 1–4, tag chips (Cintas puestas only for Deportiva A vista/Flash), and Avanzado (name/grade/length overrides) behind an expander. Only sport, second and boulder styles are offered. It rearranges and restyles theCrag's own controls instead of re-implementing them, so saving works exactly as before. A "Formulario original" link switches back to theCrag's form and the choice is remembered.
+// @description  Compact, modern "Registrar ascensión" form: two columns on desktop, one on phones, colour-coded tick tiles, auto-growing comments, attempts 1–4, tag chips and an Avanzado expander. Restyles theCrag's own controls, so saving works as before. A "Formulario original" link switches back and is remembered.
 // @match        https://www.thecrag.com/*
 // @icon         https://www.google.com/s2/favicons?domain=thecrag.com
 // @grant        GM_getValue
