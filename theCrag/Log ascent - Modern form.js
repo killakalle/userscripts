@@ -10,6 +10,8 @@
 // @grant        GM_setValue
 // @run-at       document-idle
 // @license      MIT
+// @downloadURL https://update.greasyfork.org/scripts/605977/theCrag%20-%20Log%20ascent%20-%20Modern%20form.user.js
+// @updateURL https://update.greasyfork.org/scripts/605977/theCrag%20-%20Log%20ascent%20-%20Modern%20form.meta.js
 // ==/UserScript==
 
 ;(function () {
