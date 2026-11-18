@@ -9,6 +9,8 @@
 // @icon         https://www.google.com/s2/favicons?domain=thecrag.com
 // @grant        none
 // @license      MIT
+// @downloadURL  https://update.greasyfork.org/scripts/606089/theCrag%20-%20List%20-%20Sort%20by%20area%20and%20grade.user.js
+// @updateURL    https://update.greasyfork.org/scripts/606089/theCrag%20-%20List%20-%20Sort%20by%20area%20and%20grade.meta.js
 // ==/UserScript==
 
 ;(function () {
