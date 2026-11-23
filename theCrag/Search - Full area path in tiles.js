@@ -9,6 +9,8 @@
 // @grant        none
 // @license      MIT
 // @run-at       document-idle
+// @downloadURL  https://update.greasyfork.org/scripts/606901/theCrag%20-%20Search%20-%20Full%20area%20path%20in%20tiles.user.js
+// @updateURL    https://update.greasyfork.org/scripts/606901/theCrag%20-%20Search%20-%20Full%20area%20path%20in%20tiles.meta.js
 // ==/UserScript==
 
 const SEP = ' › '
